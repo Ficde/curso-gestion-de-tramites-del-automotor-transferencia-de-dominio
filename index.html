@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espacio de Repaso - FICDE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ficde-azul-dark: #134252;
+            --ficde-azul-light: #2c5c6e;
+            --ficde-naranja: #e68161;
+            --ficde-naranja-hover: #ff9f85;
+            --tarjeta-bg: #f0f4f5;
+            --input-bg: #e2e8eb;
+            --texto-principal: #0f2d38;
+            --texto-secundario: #4a636e;
+            --verde-exito: #2e7d32;
+            --verde-bg: #c8e6c9;
+            --rojo-error: #c62828;
+            --naranja-bg: #ffe0b2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--ficde-azul-dark) 0%, #0a252e 100%);
+            min-height: 100vh;
+            color: var(--texto-principal);
+            padding: 20px;
+            background-attachment: fixed;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-img { height: 50px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+
+        .module-tag {
+            background: var(--ficde-naranja);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .welcome-card {
+            background: var(--tarjeta-bg);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border-bottom: 6px solid var(--ficde-naranja);
+            margin-bottom: 30px;
+        }
+
+        .welcome-title {
+            color: var(--ficde-azul-dark);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .fede-avatar-large {
+            width: 140px; height: 140px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: var(--ficde-naranja);
+            padding: 5px;
+            box-shadow: 0 10px 25px rgba(230, 129, 97, 0.5);
+            cursor: pointer;
+            transition: transform 0.3s;
+            overflow: hidden;
+        }
+
+        .fede-avatar-large:hover { transform: scale(1.1); }
+
+        .fede-avatar-large img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid white;
+        }
+
+        .blocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .block-card {
+            background: var(--tarjeta-bg);
+            padding: 30px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .block-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--ficde-naranja);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .block-icon {
+            font-size: 3rem; margin-bottom: 15px;
+            background: rgba(19, 66, 82, 0.1);
+            width: 70px; height: 70px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; color: var(--ficde-azul-dark);
+        }
+
+        .block-title { color: var(--ficde-azul-dark); font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; }
+
+        .block-desc { color: var(--texto-secundario); font-size: 0.9rem; line-height: 1.5; }
+
+        .activity-screen {
+            display: none;
+            grid-template-columns: 280px 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .activity-screen.active { display: grid; }
+
+        .tutor-sidebar {
+            background: var(--ficde-azul-light);
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            position: sticky; top: 20px;
+        }
+
+        .tutor-bubble {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: var(--ficde-azul-dark);
+            margin-top: 20px;
+            position: relative;
+            text-align: left;
+        }
+
+        .tutor-bubble::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            border-width: 0 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent rgba(255,255,255,0.95);
+            transform: translateX(-50%);
+        }
+
+        .activity-content {
+            background: var(--tarjeta-bg);
+            padding: 40px;
+            border-radius: 16px;
+            min-height: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .act-badge {
+            background: var(--ficde-naranja);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .act-title { font-size: 1.8rem; color: var(--ficde-azul-dark); margin: 15px 0; font-weight: 800; }
+
+        .act-instruction { font-size: 1.1rem; color: var(--texto-secundario); margin-bottom: 30px; }
+
+        .student-input {
+            width: 100%;
+            height: 150px;
+            padding: 20px;
+            background: var(--input-bg);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            color: var(--ficde-azul-dark);
+            transition: all 0.3s;
+        }
+
+        .student-input:focus { background: white; border-color: var(--ficde-naranja); outline: none; }
+
+        .fill-input {
+            border: none;
+            border-bottom: 2px solid var(--ficde-naranja);
+            background: transparent;
+            font-weight: 700;
+            color: var(--ficde-azul-dark);
+            text-align: center;
+            width: 150px;
+            font-size: 1.1rem;
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 18px;
+            margin-top: 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            background: linear-gradient(90deg, var(--ficde-naranja), #ff9f85);
+            color: white;
+            box-shadow: 0 6px 20px rgba(230, 129, 97, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .btn-action:hover { transform: translateY(-3px); }
+
+        .btn-back {
+            background: transparent;
+            color: var(--texto-secundario);
+            box-shadow: none;
+            border: 2px solid #ccc;
+            margin-top: 15px;
+        }
+
+        .btn-back:hover { background: #e0e0e0; color: var(--ficde-azul-dark); }
+
+        .traffic-row, .checklist-item {
+            background: white;
+            margin-bottom: 12px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .traffic-row:hover, .checklist-item:hover { border-color: var(--ficde-naranja); transform: translateX(5px); }
+
+        .traffic-btn {
+            width: 35px; height: 35px;
+            border-radius: 50%; border: 2px solid #ddd;
+            cursor: pointer;
+            opacity: 0.3;
+        }
+
+        .traffic-btn.active { opacity: 1; transform: scale(1.2); border-color: var(--ficde-azul-dark); }
+
+        .bg-green { background: #4CAF50; }
+
+        .bg-yellow { background: #FFC107; }
+
+        .bg-red { background: #f44336; }
+
+        .check-box {
+            width: 24px; height: 24px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .checklist-item.selected { border-color: var(--ficde-naranja); background: #fff5f0; }
+
+        .checklist-item.selected .check-box { background: var(--ficde-naranja); border-color: var(--ficde-naranja); color: white; }
+
+        .feedback-area {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            display: none;
+            animation: slideUp 0.4s;
+        }
+
+        .feedback-success { background: var(--verde-bg); color: #1b5e20; border-left: 6px solid var(--verde-exito); }
+
+        .feedback-retry { background: var(--naranja-bg); color: #bf360c; border-left: 6px solid #ef6c00; }
+
+        .feedback-fail { background: #cfd8dc; color: #37474f; border-left: 6px solid #455a64; }
+
+        #musicToggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--ficde-naranja);
+            color: white;
+            border: none;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .activity-screen { grid-template-columns: 1fr; }
+            .tutor-sidebar { display: flex; align-items: center; gap: 20px; }
+            .fede-avatar-large { width: 80px; height: 80px; }
+            .tutor-bubble::after { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- AUDIOS MP3 - Todos en la misma carpeta -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="chill-study-desk-focus-concentration-lofi-451180.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="saludoInicial" preload="auto" src="saludoinicial.mp3"></audio>
+    <audio id="mensaje1Ejercicios" preload="auto" src="mensaje1ejercicios.mp3"></audio>
+    <audio id="mensaje2Ejercicios" preload="auto" src="mensaje2ejercicios.mp3"></audio>
+    <audio id="mensaje3Ejercicios" preload="auto" src="mensaje3ejercicios.mp3"></audio>
+    <audio id="mensaje4Ejercicios" preload="auto" src="mensaje4ejercicios.mp3"></audio>
+    <audio id="respuestaCorrecta" preload="auto" src="respuestacorrecta.mp3"></audio>
+    <audio id="primerError" preload="auto" src="primererror.mp3"></audio>
+    <audio id="segundoError" preload="auto" src="segundoerror.mp3"></audio>
+    <audio id="loLograste" preload="auto" src="lolograste.mp3"></audio>
+
+    <audio id="hoverSound" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.m4a"></audio>
+    <audio id="clickSound" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.m4a"></audio>
+    <audio id="successSound" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.m4a"></audio>
+
+    <button id="musicToggle" onclick="toggleMusic()">🔇</button>
+
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="logo.png" alt="FICDE" class="logo-img" onerror="this.style.display='none'; document.getElementById('altLogo').style.display='block'">
+                <h2 id="altLogo" style="display:none; color:white; font-weight:800;">FICDE</h2>
+            </div>
+            <div class="module-tag">Módulo Transferencia de Dominio.</div>
+        </header>
+
+        <div id="selectionScreen">
+            <div class="welcome-card">
+                <div class="fede-avatar-large" onclick="playAudio('saludoInicial')">
+                    <img src="personaje.gif" alt="Fede">
+                </div>
+                <h1 class="welcome-title">Espacio de Repaso Interactivo</h1>
+                <p style="color: var(--texto-secundario); font-size: 1.1rem;">Donde el conocimiento se convierte en acción</p>
+            </div>
+
+            <div class="blocks-grid">
+                <div class="block-card" onclick="startModule('sintesis')">
+                    <div class="block-icon">🧠</div>
+                    <div class="block-title">Síntesis</div>
+                    <div class="block-desc">Conceptos generales, requisitos básicos, documentación y pasos esenciales del trámite de transferencia de dominio.</div>
+                </div>
+
+                <div class="block-card" onclick="startModule('analisis')">
+                    <div class="block-icon">🔍</div>
+                    <div class="block-title">Análisis Crítico</div>
+                    <div class="block-desc">Análisis de requisitos, decisiones del gestor, control documental y consecuencias de errores en la transferencia de dominio.</div>
+                </div>
+
+                <div class="block-card" onclick="startModule('escenarios')">
+                    <div class="block-icon">🎬</div>
+                    <div class="block-title">Escenarios</div>
+                    <div class="block-desc">Aplicación de criterios del trámite de transferencia de dominio en situaciones reales de gestión y toma de decisiones.</div>
+                </div>
+
+                <div class="block-card" onclick="startModule('practica')">
+                    <div class="block-icon">⚡</div>
+                    <div class="block-title">Práctica</div>
+                    <div class="block-desc">Aplicación operativa del trámite de transferencia de dominio mediante acciones concretas de gestión.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="activityScreen" class="activity-screen">
+            <div class="tutor-sidebar">
+                <div class="fede-avatar-large" style="width: 100px; height: 100px; border-color: var(--ficde-naranja);" onclick="replayTutorMessage()">
+                    <img src="personaje.gif" alt="Fede">
+                </div>
+                <div style="flex:1;">
+                    <h3 style="color:var(--ficde-naranja); margin-bottom:5px;">Tutor Fede</h3>
+                    <div class="tutor-bubble" id="tutorMessage"></div>
+                </div>
+            </div>
+
+            <div class="activity-content" id="activityContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // ===== GESTIÓN DE AUDIO MP3 =====
+        const audioFiles = {
+            saludoInicial: document.getElementById('saludoInicial'),
+            mensaje1: document.getElementById('mensaje1Ejercicios'),
+            mensaje2: document.getElementById('mensaje2Ejercicios'),
+            mensaje3: document.getElementById('mensaje3Ejercicios'),
+            mensaje4: document.getElementById('mensaje4Ejercicios'),
+            correcto: document.getElementById('respuestaCorrecta'),
+            error1: document.getElementById('primerError'),
+            error2: document.getElementById('segundoError'),
+            lolograste: document.getElementById('loLograste')
+        };
+
+        function playAudio(audioKey) {
+            if (audioFiles[audioKey]) {
+                audioFiles[audioKey].currentTime = 0;
+                audioFiles[audioKey].play().catch(err => console.log('Error al reproducir audio:', err));
+            }
+        }
+
+        const bgMusic = document.getElementById('bgMusic');
+        const clickSoundEl = document.getElementById('clickSound');
+        const successSoundEl = document.getElementById('successSound');
+        const hoverSoundEl = document.getElementById('hoverSound');
+
+        let musicOn = false;
+        let audioUnlocked = false;
+
+        function unlockAudio() {
+            if (audioUnlocked) return;
+            [clickSoundEl, successSoundEl, hoverSoundEl].forEach(a => {
+                a.volume = 0;
+                const p = a.play();
+                if (p) p.then(() => { a.pause(); a.currentTime = 0; a.volume = 1; }).catch(()=>{});
+            });
+            audioUnlocked = true;
+        }
+
+        document.addEventListener('pointerdown', unlockAudio, { once: true });
+        document.addEventListener('keydown', unlockAudio, { once: true });
+
+        function toggleMusic() {
+            unlockAudio();
+            if (!musicOn) {
+                bgMusic.volume = 0.1;
+                bgMusic.play().catch(() => {});
+                document.getElementById('musicToggle').innerText = '🎵';
+            } else {
+                bgMusic.pause();
+                document.getElementById('musicToggle').innerText = '🔇';
+            }
+            musicOn = !musicOn;
+        }
+
+        function playSound(type) {
+            if (!audioUnlocked) return;
+            try {
+                if (type === 'click') { clickSoundEl.currentTime=0; clickSoundEl.volume=0.8; clickSoundEl.play().catch(()=>{}); }
+                if (type === 'success') { successSoundEl.currentTime=0; successSoundEl.volume=0.8; successSoundEl.play().catch(()=>{}); }
+                if (type === 'hover') { hoverSoundEl.currentTime=0; hoverSoundEl.volume=0.2; hoverSoundEl.play().catch(()=>{}); }
+            } catch (e) {}
+        }
+
+        function wireUiSounds() {
+            document.querySelectorAll('.block-card, .btn-action, .checklist-item, .traffic-row, .fede-avatar-large').forEach(el => {
+                if (el.dataset.sound === '1') return;
+                el.dataset.sound = '1';
+                el.addEventListener('mouseenter', () => playSound('hover'));
+                el.addEventListener('click', () => playSound('click'));
+            });
+        }
+
+        window.addEventListener('load', wireUiSounds);
+
+        // ===== NORMALIZACIÓN DE TEXTO =====
+        function normalizar(txt) {
+            return txt
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase();
+        }
+
+        // ===== ACTIVIDADES: validaciones de texto simplificadas ===
+const modules = {
+
+    // ===================== SÍNTESIS =====================
+    sintesis: [
+        {
+            type: 'text',
+            badge: 'Transferencia de dominio del automotor',
+            title: 'Concepto y finalidad del trámite',
+            instruction: 'Explicá qué se entiende por transferencia de dominio y cuál es su finalidad en el registro automotor.',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('transfer')) c++; // transferencia
+                if (v.includes('domini')) c++; // dominio
+                if (v.includes('cambi')) c++; // cambio
+                if (v.includes('titul')) c++; // titularidad
+                if (v.includes('registr')) c++; // registro, registración
+                if (v.includes('propietari')) c++; // propietario (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en el cambio legal de dueño y su registración oficial.',
+            explanation: 'La transferencia de dominio es el trámite mediante el cual se registra el cambio de titularidad de un vehículo en el registro, dejando constancia legal del nuevo propietario.'
+        },
+        {
+            type: 'text',
+            badge: 'Operaciones que requieren transferencia',
+            title: 'Situaciones que generan el trámite',
+            instruction: 'Indicá en qué situaciones es obligatorio realizar una transferencia de dominio.',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('compr')) c++; // compra
+                if (v.includes('vent')) c++; // venta
+                if (v.includes('donacion')) c++; // donación
+                if (v.includes('sucesion')) c++; // sucesión
+                if (v.includes('obligatori')) c++; // obligatoria (extra)
+                if (v.includes('modific')) c++; // modifican (extra)
+                return c >= 2;
+            },
+            tutor: 'Recordá los actos jurídicos que modifican al titular.',
+            explanation: 'La transferencia de dominio es obligatoria en casos de compra-venta, donación o sucesión, ya que estas operaciones modifican la titularidad registral del vehículo.'
+        },
+        {
+            type: 'checklist',
+            badge: 'Sujetos intervinientes',
+            title: 'Personas que participan en la transferencia',
+            instruction: 'Marcá quiénes intervienen en una transferencia de dominio.',
+            items: [
+                { text: 'Aseguradora', correct: false },
+                { text: 'Comprador', correct: true },
+                { text: 'Vendedor', correct: true },
+                { text: 'Registro Seccional', correct: true }
+            ],
+            tutor: 'Pensá en quiénes firman y quién inscribe el trámite.',
+            explanation: 'En la transferencia de dominio intervienen el comprador, el vendedor y el Registro Seccional, que es quien inscribe el cambio de titularidad.'
+        },
+        {
+            type: 'text',
+            badge: 'Plazo legal del trámite',
+            title: 'Tiempo máximo para transferir',
+            instruction: 'Explicá cuál es el plazo legal para realizar la transferencia y qué sucede si no se cumple.',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('plaz')) c++; // plazo
+                if (v.includes('prohibi')) c++; // prohibición
+                if (v.includes('circul')) c++; // circular
+                if (v.includes('secuestr')) c++; // secuestro
+                if (v.includes('30')) c++; // 30 días (extra)
+                if (v.includes('habil')) c++; // hábiles (extra)
+                return c >= 2;
+            },
+            tutor: 'Revisá qué ocurre cuando el trámite no se hace a tiempo.',
+            explanation: 'El trámite debe realizarse dentro de los 30 días hábiles; si no se cumple el plazo, se dispone la prohibición de circular y el pedido de secuestro del vehículo.'
+        },
+        {
+            type: 'blanks',
+            badge: 'Documentación personal',
+            title: 'Identificación de las partes',
+            instruction: 
+                'Completá la frase.<br><br>' +
+                'El DNI acredita la __________ de las partes intervinientes.<br>' +
+                'La constancia de documento en trámite no acredita __________.',
+            blanks: ['identidad', 'identidad'],
+            tutor: 'Pensá en el valor legal del documento.',
+            explanation: 'El DNI acredita la identidad de las partes, mientras que la constancia de documento en trámite no acredita identidad.'
+        },
+        {
+            type: 'text',
+            badge: 'Formulario clave del trámite',
+            title: 'Función de la Solicitud Tipo 08',
+            instruction: '¿Para qué se utiliza la Solicitud Tipo 08 en la transferencia de dominio?',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('solicit')) c++; // solicitud
+                if (v.includes('08')) c++; // 08
+                if (v.includes('firm')) c++; // firmas
+                if (v.includes('transfer')) c++; // transferencia
+                if (v.includes('formulari')) c++; // formulario (extra)
+                if (v.includes('formaliz')) c++; // formaliza (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en el formulario que expresa la voluntad de las partes.',
+            explanation: 'La Solicitud Tipo 08 es el formulario principal del trámite, donde constan las firmas de las partes y se formaliza la transferencia de dominio.'
+        },
+        {
+            type: 'checklist',
+            badge: 'Documentación del vehículo',
+            title: 'Papeles exigidos para transferir',
+            instruction: 'Marcá la documentación del vehículo requerida para la transferencia.',
+            items: [
+                { text: 'Título del automotor', correct: true },
+                { text: 'Licencia de conducir', correct: false },
+                { text: 'Cédula de identificación', correct: true },
+                { text: 'Constancia de CUIT', correct: false }
+            ],
+            tutor: 'Pensá en los documentos que identifican al rodado.',
+            explanation: 'El título del automotor y la cédula de identificación son documentos esenciales para acreditar la situación registral del vehículo.'
+        },
+        {
+            type: 'text',
+            badge: 'Informe de dominio',
+            title: 'Utilidad previa al trámite',
+            instruction: 'Explicá para qué sirve solicitar un informe de dominio antes de transferir un vehículo.',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('inform')) c++; // informe
+                if (v.includes('domini')) c++; // dominio
+                if (v.includes('situacion')) c++; // situación
+                if (v.includes('registral')) c++; // registral
+                if (v.includes('gravamen')) c++; // gravámenes
+                if (v.includes('embarg')) c++; // embargos (extra)
+                if (v.includes('inhibi')) c++; // inhibiciones (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en embargos, inhibiciones y estado legal.',
+            explanation: 'El informe de dominio permite conocer la situación registral del vehículo, verificando la existencia de gravámenes, embargos o restricciones antes de la transferencia.'
+        },
+        {
+            type: 'traffic',
+            badge: 'Verificación policial',
+            title: 'Obligatoriedad del control físico',
+            instruction: 'Indicá si las afirmaciones son correctas o incorrectas.',
+            items: [
+                { text: 'La verificación reemplaza a la VTV.', color: 'red' },
+                { text: 'La verificación policial controla motor y chasis del vehículo.', color: 'green' },
+                { text: 'El Formulario 12 tiene una validez limitada.', color: 'green' }
+            ],
+            tutor: 'Pensá en el control físico y su alcance.',
+            explanation: 'La verificación policial controla motor y chasis, no reemplaza la VTV y el Formulario 12 tiene validez limitada.'
+        },
+        {
+            type: 'text',
+            badge: 'Presentación en el Registro',
+            title: 'Paso final del trámite',
+            instruction: '¿En qué consiste la presentación final de la documentación en el Registro?',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('turn')) c++; // turno
+                if (v.includes('document')) c++; // documentación
+                if (v.includes('registr')) c++; // Registro
+                if (v.includes('concur')) c++; // concurrir (extra)
+                if (v.includes('inscrib')) c++; // inscriba (extra)
+                if (v.includes('transfer')) c++; // transferencia (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en el momento de entregar todo y cerrar el trámite.',
+            explanation: 'La presentación final consiste en concurrir al Registro con turno asignado y toda la documentación para que se inscriba la transferencia.'
+        },
+    ],
+
+    // ===================== ANÁLISIS CRÍTICO =====================
+    analisis: [
+        {
+            type: 'text',
+            badge: 'Seguridad jurídica del trámite',
+            title: 'Importancia de la inscripción registral',
+            instruction: 'Analizá por qué la inscripción de la transferencia en el Registro es clave para la seguridad jurídica del comprador.',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('inscri')) c++; // inscripción
+                if (v.includes('segurid')) c++; // seguridad
+                if (v.includes('juridic')) c++; // jurídica
+                if (v.includes('titular')) c++; // titularidad
+                if (v.includes('consolid')) c++; // consolida (extra)
+                if (v.includes('reconoc')) c++; // reconoce (extra)
+                if (v.includes('duen')) c++; // dueño (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en qué pasa si el cambio de dueño no se registra.',
+            explanation: 'La inscripción garantiza seguridad jurídica porque consolida la titularidad del comprador y lo reconoce legalmente como dueño del vehículo.'
+        },
+        {
+            type: 'text',
+            badge: 'Rol preventivo del gestor',
+            title: 'Control previo de la situación registral',
+            instruction: '¿Por qué es importante que el gestor analice la situación registral antes de iniciar la transferencia?',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('control')) c++; // control
+                if (v.includes('previo')) c++; // previo
+                if (v.includes('situacion')) c++; // situación
+                if (v.includes('registral')) c++; // registral
+                if (v.includes('riesg')) c++; // riesgos
+                if (v.includes('detect')) c++; // detectar (extra)
+                if (v.includes('embarg')) c++; // embargos (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en problemas que pueden frenar o invalidar el trámite.',
+            explanation: 'El control previo de la situación registral permite detectar riesgos y evitar iniciar transferencias con embargos, inhibiciones o conflictos legales.'
+        },
+        {
+            type: 'checklist',
+            badge: 'Consecuencias del incumplimiento',
+            title: 'Falta de transferencia en término',
+            instruction: 'Marcá las consecuencias posibles de no realizar la transferencia dentro del plazo legal.',
+            items: [
+                { text: 'Pedido de secuestro', correct: true },
+                { text: 'Renovación automática del título', correct: false },
+                { text: 'Prohibición de circular', correct: true },
+                { text: 'Responsabilidad del titular anterior', correct: true }
+            ],
+            tutor: 'Pensá en sanciones y responsabilidades que continúan vigentes.',
+            explanation: 'La falta de transferencia genera prohibición de circular, pedido de secuestro y mantiene la responsabilidad del titular anterior.'
+        },
+        {
+            type: 'text',
+            badge: 'Verificación física del vehículo',
+            title: 'Función dentro del trámite',
+            instruction: 'Analizá la función de la verificación física en relación con la documentación presentada.',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('verific')) c++; // verificación
+                if (v.includes('fisic')) c++; // física
+                if (v.includes('motor')) c++; // motor
+                if (v.includes('chasis')) c++; // chasis
+                if (v.includes('coincid')) c++; // coincidan (extra)
+                if (v.includes('identid')) c++; // identidad (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en la coincidencia entre vehículo y papeles.',
+            explanation: 'La verificación física controla que motor y chasis coincidan con la documentación, asegurando la identidad real del vehículo transferido.'
+        },
+        {
+            type: 'blanks',
+            badge: 'Responsabilidad del transmitente',
+            title: 'Riesgos hasta la inscripción',
+            instruction: 
+                'Completá las frases.<br><br>' +
+                'Hasta que se inscribe la transferencia, el __________ sigue siendo responsable.<br>' +
+                'La falta de inscripción afecta la __________ legal del comprador.',
+            blanks: ['titular registral', 'seguridad juridica'],
+            tutor: 'Pensá en quién responde antes del cambio registral.',
+            explanation: 'Mientras no se inscribe la transferencia, el titular registral sigue siendo responsable y se afecta la seguridad jurídica del comprador.'
+        },
+        {
+            type: 'text',
+            badge: 'Elección del Registro',
+            title: 'Criterios de radicación',
+            instruction: '¿Qué criterios se tienen en cuenta para elegir el Registro donde se radica el trámite?',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('radic')) c++; // radicación
+                if (v.includes('domicili')) c++; // domicilio
+                if (v.includes('guard')) c++; // guarda
+                if (v.includes('comprad')) c++; // comprador (extra)
+                if (v.includes('vehicul')) c++; // vehículo (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en el lugar del comprador o del vehículo.',
+            explanation: 'La radicación puede definirse según el domicilio del comprador o el lugar de guarda habitual del vehículo.'
+        },
+        {
+            type: 'checklist',
+            badge: 'Errores frecuentes',
+            title: 'Fallas documentales en la transferencia',
+            instruction: 'Marcá errores que pueden generar observaciones en el trámite.',
+            items: [
+                { text: 'Formulario incompleto', correct: true },
+                { text: 'Uso de tinta incorrecta', correct: true },
+                { text: 'Presentación sin turno', correct: false },
+                { text: 'Firmas sin certificar', correct: true }
+            ],
+            tutor: 'Pensá en requisitos formales exigidos por el Registro.',
+            explanation: 'Las firmas sin certificar, los formularios incompletos y el uso de tinta incorrecta generan observaciones en la transferencia.'
+        },
+        {
+            type: 'text',
+            badge: 'Función del plazo legal',
+            title: 'Protección del comprador y del sistema',
+            instruction: 'Analizá por qué el plazo legal de 30 días protege a las partes y al sistema registral.',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('plaz')) c++; // plazo
+                if (v.includes('legal')) c++; // legal
+                if (v.includes('control')) c++; // control
+                if (v.includes('orden')) c++; // orden
+                if (v.includes('proteg')) c++; // protegiendo (extra)
+                if (v.includes('evit')) c++; // evitando (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en previsibilidad y organización administrativa.',
+            explanation: 'El plazo legal permite control y orden del sistema, protegiendo a las partes y evitando situaciones irregulares prolongadas.'
+        },
+        {
+            type: 'traffic',
+            badge: 'Evaluación del trámite',
+            title: 'Condiciones para avanzar',
+            instruction: 'Indicá si las afirmaciones son correctas o incorrectas.',
+            items: [
+                { text: 'La verificación física es opcional en todos los casos.', color: 'red' },
+                { text: 'El informe de dominio permite detectar embargos.', color: 'green' },
+                { text: 'El Registro puede observar el trámite por errores formales.', color: 'green' }
+            ],
+            tutor: 'Pensá en controles previos y formales.',
+            explanation: 'El informe de dominio detecta embargos, la verificación no siempre es opcional y el Registro puede observar el trámite por errores formales.'
+        },
+        {
+            type: 'text',
+            badge: 'Responsabilidad profesional',
+            title: 'Impacto del accionar del gestor',
+            instruction: '¿Cómo influye el accionar del gestor en el resultado de la transferencia?',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('gestor')) c++; // gestor
+                if (v.includes('responsabil')) c++; // responsabilidad
+                if (v.includes('correct')) c++; // correcta
+                if (v.includes('inscri')) c++; // inscripción
+                if (v.includes('control')) c++; // control (extra)
+                if (v.includes('asesor')) c++; // asesoramiento (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en precisión, control y asesoramiento.',
+            explanation: 'El gestor tiene responsabilidad clave porque su control y asesoramiento garantizan una correcta inscripción de la transferencia.'
+        },
+    ],
+
+    // ===================== ESCENARIOS =====================
+    escenarios: [
+        {
+            type: 'text',
+            badge: 'Compra-venta con urgencia',
+            title: 'Decisión inicial del gestor',
+            instruction: 'Un comprador solicita iniciar la transferencia de inmediato, pero aún no cuenta con el informe de dominio. ¿Cómo debería proceder el gestor?',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('inform')) c++; // informe
+                if (v.includes('domini')) c++; // dominio
+                if (v.includes('control')) c++; // control
+                if (v.includes('previo')) c++; // previo
+                if (v.includes('riesg')) c++; // riesgos
+                if (v.includes('detect')) c++; // detectar (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en qué se debe verificar antes de avanzar.',
+            explanation: 'El gestor debe priorizar el informe de dominio como control previo, ya que permite detectar riesgos registrales antes de iniciar la transferencia.'
+        },
+        {
+            type: 'traffic',
+            badge: 'Evaluación de conductas profesionales',
+            title: 'Acciones correctas del gestor',
+            instruction: 'Indicá si las conductas son correctas o incorrectas.',
+            items: [
+                { text: 'Advertir al comprador sobre posibles embargos.', color: 'green' },
+                { text: 'Solicitar el informe de dominio antes de avanzar.', color: 'green' },
+                { text: 'Iniciar la transferencia sin conocer la situación registral.', color: 'red' }
+            ],
+            tutor: 'Pensá en prevención y resguardo legal.',
+            explanation: 'La conducta correcta incluye solicitar el informe de dominio, advertir riesgos y evitar iniciar la transferencia sin control previo.'
+        },
+        {
+            type: 'text',
+            badge: 'Verificación pendiente',
+            title: 'Impacto en el trámite',
+            instruction: 'Analizá qué sucede si se presenta la documentación sin haber realizado la verificación física obligatoria.',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('verific')) c++; // verificación
+                if (v.includes('fisic')) c++; // física
+                if (v.includes('observ')) c++; // observación
+                if (v.includes('tramit')) c++; // trámite
+                if (v.includes('acredit')) c++; // acredita (extra)
+                if (v.includes('correspond')) c++; // correspondencia (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en el control de motor y chasis.',
+            explanation: 'La falta de verificación física genera observación del trámite, ya que no se acredita la correspondencia entre vehículo y documentación.'
+        },
+        {
+            type: 'checklist',
+            badge: 'Presentación incompleta',
+            title: 'Elementos faltantes en el Registro',
+            instruction: 'Marcá los elementos cuya ausencia puede frenar la inscripción.',
+            items: [
+                { text: 'Formulario 08 con firmas certificadas', correct: true },
+                { text: 'Título del automotor', correct: true },
+                { text: 'Licencia de conducir del comprador', correct: false },
+                { text: 'Verificación física obligatoria', correct: true }
+            ],
+            tutor: 'Pensá en lo que exige el Registro para inscribir.',
+            explanation: 'Sin el Formulario 08 certificado, la verificación física y el título del automotor, el trámite queda observado.'
+        },
+        {
+            type: 'text',
+            badge: 'Plazo excedido',
+            title: 'Consecuencias operativas',
+            instruction: '¿Qué consecuencias enfrenta un comprador que supera el plazo legal sin transferir?',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('plaz')) c++; // plazo
+                if (v.includes('legal')) c++; // legal
+                if (v.includes('prohib')) c++; // prohibición
+                if (v.includes('circul')) c++; // circular
+                if (v.includes('secuestr')) c++; // secuestro
+                if (v.includes('afect')) c++; // afectando (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en sanciones administrativas.',
+            explanation: 'Superar el plazo legal puede generar prohibición de circular y pedido de secuestro, afectando el uso del vehículo.'
+        },
+        {
+            type: 'traffic',
+            badge: 'Evaluación del plazo',
+            title: 'Cumplimiento temporal',
+            instruction: 'Indicá si las afirmaciones son correctas o incorrectas.',
+            items: [
+                { text: 'La transferencia tardía afecta la circulación del vehículo.', color: 'green' },
+                { text: 'El plazo legal para transferir es de 30 días hábiles.', color: 'green' },
+                { text: 'El incumplimiento del plazo no tiene consecuencias.', color: 'red' }
+            ],
+            tutor: 'Pensá en tiempos legales y sanciones.',
+            explanation: 'El plazo legal es de 30 días hábiles y su incumplimiento genera consecuencias como prohibición de circular.'
+        },
+        {
+            type: 'text',
+            badge: 'Elección del Registro',
+            title: 'Criterio del domicilio',
+            instruction: 'Analizá cómo influye el domicilio del comprador en la elección del Registro Seccional.',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('domicili')) c++; // domicilio
+                if (v.includes('comprad')) c++; // comprador
+                if (v.includes('radic')) c++; // radicación
+                if (v.includes('registr')) c++; // registro
+                if (v.includes('defin')) c++; // definir (extra)
+                if (v.includes('cercan')) c++; // cercano (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en cercanía y jurisdicción.',
+            explanation: 'El domicilio del comprador permite definir la radicación del trámite en un Registro competente y cercano.'
+        },
+        {
+            type: 'checklist',
+            badge: 'Gestión responsable',
+            title: 'Acciones preventivas del gestor',
+            instruction: 'Marcá acciones que reflejan una gestión responsable.',
+            items: [
+                { text: 'Controlar plazos legales', correct: true },
+                { text: 'Presentar formularios incompletos', correct: false },
+                { text: 'Revisar documentación antes del turno', correct: true },
+                { text: 'Advertir riesgos al comprador', correct: true }
+            ],
+            tutor: 'Pensá en anticiparse a errores.',
+            explanation: 'La gestión responsable implica revisar documentación, advertir riesgos y controlar plazos legales.'
+        },
+        {
+            type: 'text',
+            badge: 'Observaciones registrales',
+            title: 'Impacto en los tiempos',
+            instruction: '¿Cómo afectan las observaciones del Registro al desarrollo del trámite?',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('observ')) c++; // observaciones
+                if (v.includes('demor')) c++; // demoras
+                if (v.includes('correcc')) c++; // correcciones
+                if (v.includes('oblig')) c++; // obligan (extra)
+                if (v.includes('realiz')) c++; // realizar (extra)
+                if (v.includes('continu')) c++; // continuar (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en trámites que no avanzan.',
+            explanation: 'Las observaciones generan demoras y obligan a realizar correcciones antes de continuar con la transferencia.'
+        },
+        {
+            type: 'traffic',
+            badge: 'Cierre del trámite',
+            title: 'Condiciones para la inscripción',
+            instruction: 'Indicá si las afirmaciones son correctas o incorrectas.',
+            items: [
+                { text: 'Un trámite sin observaciones puede inscribirse.', color: 'green' },
+                { text: 'La documentación correcta agiliza la transferencia.', color: 'green' },
+                { text: 'La inscripción depende solo del pago de aranceles.', color: 'red' }
+            ],
+            tutor: 'Pensá en requisitos completos y correctos.',
+            explanation: 'La inscripción se logra cuando no hay observaciones y la documentación correcta agiliza la transferencia.'
+        },
+    ],
+
+    // ===================== PRÁCTICA =====================
+    practica: [
+        {
+            type: 'checklist',
+            badge: 'Inicio del trámite',
+            title: 'Verificación previa obligatoria',
+            instruction: 'Marcá las acciones que deben realizarse antes de iniciar una transferencia.',
+            items: [
+                { text: 'Solicitar informe de dominio', correct: true },
+                { text: 'Controlar documentación del vehículo', correct: true },
+                { text: 'Verificar identidad de las partes', correct: true },
+                { text: 'Presentar el trámite sin revisión previa', correct: false }
+            ],
+            tutor: 'Pensá en los controles previos que evitan problemas posteriores.',
+            explanation: 'El inicio correcto del trámite requiere solicitar informe de dominio, controlar documentación y verificar identidad de las partes.'
+        },
+        {
+            type: 'text',
+            badge: 'Organización documental',
+            title: 'Preparación para el turno registral',
+            instruction: '¿Cómo debe organizarse la documentación antes de concurrir al Registro?',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('document')) c++; // documentación
+                if (v.includes('control')) c++; // control
+                if (v.includes('orden')) c++; // orden
+                if (v.includes('evit')) c++; // evitar (extra)
+                if (v.includes('observ')) c++; // observaciones (extra)
+                if (v.includes('agiliz')) c++; // agilizar (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en evitar observaciones y demoras.',
+            explanation: 'La documentación debe organizarse con control y orden previo para evitar observaciones y agilizar el trámite en el Registro.'
+        },
+        {
+            type: 'blanks',
+            badge: 'Formularios esenciales',
+            title: 'Identificación del trámite',
+            instruction: 
+                'Completá las frases.<br><br>' +
+                'La Solicitud Tipo 08 formaliza la __________ de dominio.<br>' +
+                'Las firmas deben estar debidamente __________.',
+            blanks: ['transferencia', 'certificadas'],
+            tutor: 'Pensá en el formulario principal y su validez legal.',
+            explanation: 'La Solicitud Tipo 08 formaliza la transferencia y requiere firmas certificadas para su validez.'
+        },
+        {
+            type: 'traffic',
+            badge: 'Control del vehículo',
+            title: 'Verificación física',
+            instruction: 'Indicá si las afirmaciones son correctas o incorrectas.',
+            items: [
+                { text: 'La verificación física controla motor y chasis.', color: 'green' },
+                { text: 'Puede omitirse aunque sea obligatoria.', color: 'red' },
+                { text: 'El Formulario 12 tiene validez limitada.', color: 'green' }
+            ],
+            tutor: 'Pensá en el control físico exigido por el Registro.',
+            explanation: 'La verificación física controla motor y chasis, no puede omitirse cuando es obligatoria y el Formulario 12 tiene validez limitada.'
+        },
+        {
+            type: 'text',
+            badge: 'Gestión de plazos',
+            title: 'Cumplimiento temporal del trámite',
+            instruction: 'Explicá cómo debe gestionarse el plazo legal para evitar sanciones.',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('plaz')) c++; // plazo
+                if (v.includes('control')) c++; // control
+                if (v.includes('cumplimient')) c++; // cumplimiento
+                if (v.includes('seguimient')) c++; // seguimiento (extra)
+                if (v.includes('asegur')) c++; // asegurar (extra)
+                if (v.includes('sancion')) c++; // sanciones (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en seguimiento y organización.',
+            explanation: 'El plazo legal se gestiona mediante control y seguimiento para asegurar el cumplimiento y evitar sanciones.'
+        },
+        {
+            type: 'checklist',
+            badge: 'Presentación en el Registro',
+            title: 'Requisitos formales',
+            instruction: 'Marcá requisitos formales exigidos al presentar el trámite.',
+            items: [
+                { text: 'Firmas certificadas', correct: true },
+                { text: 'Presentación sin turno', correct: false },
+                { text: 'Tinta negra o azul', correct: true },
+                { text: 'Formularios completos', correct: true }
+            ],
+            tutor: 'Pensá en exigencias formales del Registro.',
+            explanation: 'La presentación correcta exige formularios completos, firmas certificadas y uso de tinta negra o azul.'
+        },
+        {
+            type: 'text',
+            badge: 'Rol del gestor',
+            title: 'Acompañamiento al cliente',
+            instruction: '¿Cómo el gestor acompaña al cliente durante la transferencia?',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('asesor')) c++; // asesoramiento
+                if (v.includes('control')) c++; // control
+                if (v.includes('seguimient')) c++; // seguimiento
+                if (v.includes('inscri')) c++; // inscripción (extra)
+                if (v.includes('final')) c++; // final (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en guía y responsabilidad profesional.',
+            explanation: 'El gestor acompaña con asesoramiento, control del trámite y seguimiento hasta la inscripción final.'
+        },
+        {
+            type: 'traffic',
+            badge: 'Prevención de errores',
+            title: 'Buenas prácticas',
+            instruction: 'Indicá si las afirmaciones son correctas o incorrectas.',
+            items: [
+                { text: 'El control previo mejora la gestión.', color: 'green' },
+                { text: 'Revisar la documentación reduce observaciones.', color: 'green' },
+                { text: 'Las observaciones no afectan los plazos.', color: 'red' }
+            ],
+            tutor: 'Pensá en anticiparse a los problemas.',
+            explanation: 'Revisar documentación y realizar control previo reduce observaciones y mejora la gestión del trámite.'
+        },
+        {
+            type: 'text',
+            badge: 'Cierre del trámite',
+            title: 'Inscripción de la transferencia',
+            instruction: 'Explicá qué implica el cierre exitoso de una transferencia de dominio.',
+            validation: (raw) => {
+                const v = normalizar(raw);
+                let c = 0;
+                if (v.includes('inscri')) c++; // inscripción
+                if (v.includes('titular')) c++; // titularidad
+                if (v.includes('registr')) c++; // registro
+                if (v.includes('consolid')) c++; // consolidando (extra)
+                if (v.includes('nuev')) c++; // nuevo (extra)
+                if (v.includes('duen')) c++; // dueño (extra)
+                return c >= 2;
+            },
+            tutor: 'Pensá en el resultado final del trámite.',
+            explanation: 'El cierre exitoso se logra con la inscripción en el Registro, consolidando la titularidad del nuevo dueño.'
+        },
+        {
+            type: 'checklist',
+            badge: 'Evaluación final',
+            title: 'Trámite correctamente gestionado',
+            instruction: 'Marcá indicadores de una transferencia correctamente gestionada.',
+            items: [
+                { text: 'Inscripción sin observaciones', correct: true },
+                { text: 'Falta de control previo', correct: false },
+                { text: 'Documentación completa', correct: true },
+                { text: 'Plazo legal cumplido', correct: true }
+            ],
+            tutor: 'Pensá en orden, control y cumplimiento.',
+            explanation: 'Una transferencia correctamente gestionada se refleja en inscripción sin observaciones, documentación completa y plazo legal cumplido.'
+        }
+    ]
+};
+
+        let currentModule = '';
+        let currentIndex = 0;
+        let attemptCount = 0;
+        let lastAudioModule = null;
+
+        // ===== MAPEO DE MÓDULOS A AUDIOS =====
+        const moduloAudioMap = {
+            'sintesis': 'mensaje1',
+            'analisis': 'mensaje2',
+            'escenarios': 'mensaje3',
+            'practica': 'mensaje4'
+        };
+
+        function startModule(id) {
+            playSound('click');
+            currentModule = id;
+            currentIndex = 0;
+            attemptCount = 0;
+            lastAudioModule = id;
+
+            // Reproducir el audio del módulo correspondiente
+            const audioKey = moduloAudioMap[id];
+            if (audioKey) {
+                playAudio(audioKey);
+            }
+
+            document.getElementById('selectionScreen').style.display = 'none';
+            document.getElementById('activityScreen').classList.add('active');
+
+            setTimeout(loadActivity, 300);
+        }
+
+        function loadActivity() {
+            attemptCount = 0;
+
+            if (currentIndex >= modules[currentModule].length) {
+                // Reproducir "lolograste.mp3" al terminar TODAS las preguntas
+                playAudio('lolograste');
+                playSound('success');
+                alert('¡Excelente! Completaste este bloque.');
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+                return;
+            }
+
+            const data = modules[currentModule][currentIndex];
+            const container = document.getElementById('activityContainer');
+
+            const msg = `Pregunta ${currentIndex + 1} de ${modules[currentModule].length}: ${data.tutor}`;
+            document.getElementById('tutorMessage').innerText = msg;
+
+            let html = `<span class="act-badge">${data.badge}</span>
+                        <h2 class="act-title">${data.title}</h2>
+                        <p class="act-instruction">${data.instruction}</p>`;
+
+            if (data.type === 'text') {
+                html += `<textarea id="txtInput" class="student-input" placeholder="Escribe tu respuesta con tus palabras..."></textarea>`;
+            } else if (data.type === 'blanks') {
+                html += `<div style="font-size:1.2rem; line-height:2.5;">`;
+                data.blanks.forEach((b, i) => {
+                    html += `${i + 1}. <input type="text" class="fill-input" data-ans="${b}"> <br>`;
+                });
+                html += `</div>`;
+            } else if (data.type === 'traffic') {
+                data.items.forEach((item, i) => {
+                    html += `<div class="traffic-row" id="row-${i}">
+                                <span>${item.text}</span>
+                                <div style="display:flex; gap:10px;">
+                                    <div class="traffic-btn bg-green" onclick="selTraffic(${i}, 'green')"></div>
+                                    <div class="traffic-btn bg-yellow" onclick="selTraffic(${i}, 'yellow')"></div>
+                                    <div class="traffic-btn bg-red" onclick="selTraffic(${i}, 'red')"></div>
+                                </div>
+                            </div>`;
+                });
+            } else if (data.type === 'checklist') {
+                data.items.forEach((item) => {
+                    html += `<div class="checklist-item" onclick="toggleCheck(this)" data-correct="${item.correct}">
+                                <div class="check-box"></div>
+                                <span>${item.text}</span>
+                            </div>`;
+                });
+            }
+
+            html += `<div id="feedback" class="feedback-area"></div>
+                     <button id="btnCheck" class="btn-action" onclick="validate()">Verificar respuesta</button>
+                     <button class="btn-action btn-back" onclick="location.reload()">Salir al menú</button>`;
+
+            container.innerHTML = html;
+            wireUiSounds();
+        }
+
+        let trafficAns = {};
+
+        function selTraffic(idx, color) {
+            trafficAns[idx] = color;
+            const row = document.getElementById(`row-${idx}`);
+            row.querySelectorAll('.traffic-btn').forEach(b => b.classList.remove('active'));
+            row.querySelector(`.bg-${color}`).classList.add('active');
+            playSound('click');
+        }
+
+        function toggleCheck(el) {
+            el.classList.toggle('selected');
+            el.querySelector('.check-box').innerText = el.classList.contains('selected') ? '✓' : '';
+
+            if (el.classList.contains('selected')) {
+                el.style.borderColor = 'var(--ficde-naranja)';
+                el.querySelector('.check-box').style.background = 'var(--ficde-naranja)';
+                el.querySelector('.check-box').style.borderColor = 'var(--ficde-naranja)';
+                el.querySelector('.check-box').style.color = 'white';
+            } else {
+                el.style.borderColor = 'transparent';
+                el.querySelector('.check-box').style.background = 'transparent';
+                el.querySelector('.check-box').style.borderColor = '#ccc';
+            }
+
+            playSound('click');
+        }
+
+        function validate() {
+            const data = modules[currentModule][currentIndex];
+            const feedback = document.getElementById('feedback');
+            let isCorrect = false;
+
+            if (data.type === 'text') {
+                const val = document.getElementById('txtInput').value;
+                isCorrect = data.validation(val);
+            } else if (data.type === 'blanks') {
+                const inputs = document.querySelectorAll('.fill-input');
+                let hits = 0;
+                inputs.forEach(inp => {
+                    const v = normalizar(inp.value);
+                    const ans = normalizar(inp.dataset.ans);
+                    if (v.length > 1 && ans.startsWith(v.slice(0, Math.max(2, Math.min(v.length, ans.length))))) hits++;
+                });
+                isCorrect = (hits === data.blanks.length);
+            } else if (data.type === 'traffic') {
+                let hits = 0;
+                data.items.forEach((item, i) => { if (trafficAns[i] === item.color) hits++; });
+                isCorrect = (hits === data.items.length);
+            } else if (data.type === 'checklist') {
+                let correct = true;
+                document.querySelectorAll('.checklist-item').forEach(item => {
+                    const sel = item.classList.contains('selected');
+                    const should = item.dataset.correct === 'true';
+                    if (sel !== should) correct = false;
+                });
+                isCorrect = correct;
+            }
+
+            feedback.style.display = 'block';
+
+            if (isCorrect) {
+                playAudio('correcto');
+                playSound('success');
+                feedback.className = 'feedback-area feedback-success';
+                feedback.innerHTML = `<strong>¡Muy bien!</strong><br>${data.explanation}`;
+                document.getElementById('btnCheck').innerText = 'Siguiente pregunta →';
+                document.getElementById('btnCheck').onclick = () => { currentIndex++; loadActivity(); };
+            } else {
+                attemptCount++;
+
+                if (attemptCount < 2) {
+                    playAudio('error1');
+                    feedback.className = 'feedback-area feedback-retry';
+                    feedback.innerHTML = `<strong>Buen intento.</strong> Revisá tu respuesta. Pista: ${data.tutor}`;
+                } else {
+                    playAudio('error2');
+                    feedback.className = 'feedback-area feedback-fail';
+                    feedback.innerHTML = `<strong>No pasa nada, aprendamos juntos:</strong><br>${data.explanation}`;
+                    document.getElementById('btnCheck').innerText = 'Entendido, continuar →';
+                    document.getElementById('btnCheck').onclick = () => { currentIndex++; loadActivity(); };
+                }
+            }
+        }
+
+        function replayTutorMessage() {
+            // Replay del último audio de módulo reproducido
+            if (lastAudioModule) {
+                const audioKey = moduloAudioMap[lastAudioModule];
+                if (audioKey) {
+                    playAudio(audioKey);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
