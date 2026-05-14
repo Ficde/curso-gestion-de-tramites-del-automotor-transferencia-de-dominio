@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espacio de Repaso - FICDE</title>
+    <title>Espacio de Repaso - MOD Transferencia de Dominio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -100,6 +100,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 20px;
+            justify-content: center;
         }
 
         .block-card {
@@ -110,6 +111,8 @@
             transition: all 0.3s ease;
             position: relative;
             border: 2px solid transparent;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         .block-card:hover {
@@ -128,7 +131,14 @@
 
         .block-title { color: var(--ficde-azul-dark); font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; }
 
-        .block-desc { color: var(--texto-secundario); font-size: 0.9rem; line-height: 1.5; }
+        .block-desc { 
+            color: var(--texto-secundario); 
+            font-size: 0.9rem; 
+            line-height: 1.5; 
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
 
         .activity-screen {
             display: none;
@@ -158,6 +168,9 @@
             margin-top: 20px;
             position: relative;
             text-align: left;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
 
         .tutor-bubble::after {
@@ -191,7 +204,14 @@
 
         .act-title { font-size: 1.8rem; color: var(--ficde-azul-dark); margin: 15px 0; font-weight: 800; }
 
-        .act-instruction { font-size: 1.1rem; color: var(--texto-secundario); margin-bottom: 30px; }
+        .act-instruction { 
+            font-size: 1.1rem; 
+            color: var(--texto-secundario); 
+            margin-bottom: 30px; 
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
 
         .student-input {
             width: 100%;
@@ -336,7 +356,7 @@
 </head>
 
 <body>
-    <!-- AUDIOS MP3 - Todos en la misma carpeta -->
+    <!-- AUDIOS MP3 -->
     <audio id="bgMusic" loop preload="auto">
         <source src="chill-study-desk-focus-concentration-lofi-451180.mp3" type="audio/mpeg">
     </audio>
@@ -363,7 +383,7 @@
                 <img src="logo.png" alt="FICDE" class="logo-img" onerror="this.style.display='none'; document.getElementById('altLogo').style.display='block'">
                 <h2 id="altLogo" style="display:none; color:white; font-weight:800;">FICDE</h2>
             </div>
-            <div class="module-tag">Módulo Transferencia de Dominio.</div>
+            <div class="module-tag">Módulo: Transferencia de Dominio</div>
         </header>
 
         <div id="selectionScreen">
@@ -379,25 +399,25 @@
                 <div class="block-card" onclick="startModule('sintesis')">
                     <div class="block-icon">🧠</div>
                     <div class="block-title">Síntesis</div>
-                    <div class="block-desc">Conceptos generales, requisitos básicos, documentación y pasos esenciales del trámite de transferencia de dominio.</div>
+                    <div class="block-desc">Definición de transferencia de dominio, plazos legales, requisitos de identidad, formularios fundamentales y verificación física inicial.</div>
                 </div>
 
                 <div class="block-card" onclick="startModule('analisis')">
                     <div class="block-icon">🔍</div>
                     <div class="block-title">Análisis Crítico</div>
-                    <div class="block-desc">Análisis de requisitos, decisiones del gestor, control documental y consecuencias de errores en la transferencia de dominio.</div>
+                    <div class="block-desc">Errores en la acreditación de identidad, consecuencias de la mora en la transferencia, mitos sobre la verificación física, exenciones para familiares y responsabilidad civil del vendedor.</div>
                 </div>
 
                 <div class="block-card" onclick="startModule('escenarios')">
                     <div class="block-icon">🎬</div>
                     <div class="block-title">Escenarios</div>
-                    <div class="block-desc">Aplicación de criterios del trámite de transferencia de dominio en situaciones reales de gestión y toma de decisiones.</div>
+                    <div class="block-desc">Uso de cédula azul, pérdida de documentación, justificación de fondos, transferencias judiciales, robos y responsabilidad del vendedor.</div>
                 </div>
 
                 <div class="block-card" onclick="startModule('practica')">
                     <div class="block-icon">⚡</div>
                     <div class="block-title">Práctica</div>
-                    <div class="block-desc">Aplicación operativa del trámite de transferencia de dominio mediante acciones concretas de gestión.</div>
+                    <div class="block-desc">Procedimientos de inscripción, pasos para la verificación física, ejecución de trámites por pérdida de documentación, cálculo de gastos y honorarios profesionales.</div>
                 </div>
             </div>
         </div>
@@ -448,7 +468,7 @@
 
         function unlockAudio() {
             if (audioUnlocked) return;
-            [clickSoundEl, successSoundEl, hoverSoundEl].forEach(a => {
+            Object.values(audioFiles).forEach(a => {
                 a.volume = 0;
                 const p = a.play();
                 if (p) p.then(() => { a.pause(); a.currentTime = 0; a.volume = 1; }).catch(()=>{});
@@ -494,683 +514,547 @@
 
         // ===== NORMALIZACIÓN DE TEXTO =====
         function normalizar(txt) {
-            return txt
-                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase();
+            return txt.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         }
 
-        // ===== ACTIVIDADES: validaciones de texto simplificadas ===
-const modules = {
-
-    // ===================== SÍNTESIS =====================
-    sintesis: [
-        {
-            type: 'text',
-            badge: 'Transferencia de dominio del automotor',
-            title: 'Concepto y finalidad del trámite',
-            instruction: 'Explicá qué se entiende por transferencia de dominio y cuál es su finalidad en el registro automotor.',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('transfer')) c++; // transferencia
-                if (v.includes('domini')) c++; // dominio
-                if (v.includes('cambi')) c++; // cambio
-                if (v.includes('titul')) c++; // titularidad
-                if (v.includes('registr')) c++; // registro, registración
-                if (v.includes('propietari')) c++; // propietario (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en el cambio legal de dueño y su registración oficial.',
-            explanation: 'La transferencia de dominio es el trámite mediante el cual se registra el cambio de titularidad de un vehículo en el registro, dejando constancia legal del nuevo propietario.'
-        },
-        {
-            type: 'text',
-            badge: 'Operaciones que requieren transferencia',
-            title: 'Situaciones que generan el trámite',
-            instruction: 'Indicá en qué situaciones es obligatorio realizar una transferencia de dominio.',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('compr')) c++; // compra
-                if (v.includes('vent')) c++; // venta
-                if (v.includes('donacion')) c++; // donación
-                if (v.includes('sucesion')) c++; // sucesión
-                if (v.includes('obligatori')) c++; // obligatoria (extra)
-                if (v.includes('modific')) c++; // modifican (extra)
-                return c >= 2;
-            },
-            tutor: 'Recordá los actos jurídicos que modifican al titular.',
-            explanation: 'La transferencia de dominio es obligatoria en casos de compra-venta, donación o sucesión, ya que estas operaciones modifican la titularidad registral del vehículo.'
-        },
-        {
-            type: 'checklist',
-            badge: 'Sujetos intervinientes',
-            title: 'Personas que participan en la transferencia',
-            instruction: 'Marcá quiénes intervienen en una transferencia de dominio.',
-            items: [
-                { text: 'Aseguradora', correct: false },
-                { text: 'Comprador', correct: true },
-                { text: 'Vendedor', correct: true },
-                { text: 'Registro Seccional', correct: true }
+        // ===== ACTIVIDADES =====
+        const modules = {
+            sintesis: [
+                {
+                    type: 'text',
+                    badge: 'Marco General',
+                    title: 'Definición de transferencia',
+                    instruction: 'Explica en qué consiste el trámite de transferencia de dominio.',
+                    tutor: 'Pensá en el cambio de nombre legal ante la autoridad registral.',
+                    explanation: 'La transferencia es el trámite para transmitir la titularidad de un vehículo mediante una escritura pública ante el Registro.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['titularidad', 'vehiculo', 'escritura', 'transmitir', 'registro'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'text',
+                    badge: 'Marco General',
+                    title: 'Plazos del trámite',
+                    instruction: 'Indica el tiempo límite para realizar la transferencia tras una operación de compra-venta.',
+                    tutor: 'Existe una consecuencia administrativa grave si se supera este periodo legal.',
+                    explanation: 'El trámite debe hacerse en un plazo de 30 días hábiles, de lo contrario se decretará la prohibición de circular.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['dias', 'habiles', 'prohibicion', 'circular', 'treinta'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Identificación',
+                    title: 'Documentación para Argentinos',
+                    instruction: 'Selecciona los documentos válidos para acreditar identidad en el caso de ciudadanos argentinos.',
+                    items: [
+                        { text: 'DNI', correct: true },
+                        { text: 'Libreta Cívica (si tiene más de 75 años)', correct: true },
+                        { text: 'Constancia de documento en trámite', correct: false },
+                        { text: 'Pasaporte', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'La constancia de trámite temporal no es un documento válido para acreditar identidad.',
+                    explanation: 'Para argentinos, el documento válido es el DNI o la LC/LE solo si el titular supera los 75 años.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Formularios',
+                    title: 'El Formulario 08',
+                    instruction: 'Describi la utilidad y las modalidades de gestión para el Formulario 08.',
+                    tutor: 'Es el documento central donde se certifican las firmas de comprador y vendedor.',
+                    explanation: 'El Formulario 08 funciona como el contrato de transferencia y puede gestionarse de forma presencial o por internet.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['contrato', 'transferencia', 'presencial', 'internet', 'gestionarse'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'blanks',
+                    anyOrder: false,
+                    badge: 'Requisitos Fiscales',
+                    title: 'Constancias impositivas',
+                    instruction: 'Completar la frase sobre los requisitos de identificación tributaria del comprador.<br><br>El comprador debe presentar constancia de _____ emitida por ARCA, _____ de ANSES o tramitar el _____ mediante formulario.',
+                    blanks: ['CUIT', 'CUIL', 'CDI'],
+                    tutor: 'Son las tres siglas principales que identifican la situación fiscal del adquirente.',
+                    explanation: 'El adquirente debe acreditar su CUIT, CUIL o gestionar un CDI para cumplir con los requisitos fiscales,.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Verificación',
+                    title: 'Finalidad de la Verificación Física',
+                    instruction: 'Define el objetivo de realizar la verificación del motor y chasis en las plantas habilitadas.',
+                    tutor: 'Se busca asegurar que los datos físicos grabados coincidan con los papeles del rodado.',
+                    explanation: 'El trámite constata que la numeración del motor y chasis esté en regla y coincida con la documentación,.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['numeracion', 'motor', 'chasis', 'regla', 'documentacion', 'coincida'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Documentación del Vehículo',
+                    title: 'Papeles indispensables',
+                    instruction: 'Marcar los documentos del rodado que el vendedor debe entregar obligatoriamente para el trámite.',
+                    items: [
+                        { text: 'Título de propiedad', correct: true },
+                        { text: 'Cédula de identificación (verde)', correct: true },
+                        { text: 'Póliza de seguro', correct: false },
+                        { text: 'Recibo de patente', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Son los dos documentos registrales básicos mencionados en los requisitos obligatorios.',
+                    explanation: 'Es obligatorio presentar el título de propiedad y la cédula de identificación del vehículo para la transferencia,.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Procedimiento Prevencional',
+                    title: 'El Informe de Dominio',
+                    instruction: 'Explica la importancia de solicitar un informe de dominio antes de concretar la compra.',
+                    tutor: 'Este documento permite conocer si el automóvil tiene impedimentos legales vigentes.',
+                    explanation: 'Permite conocer la situación registral del vehículo, detectando posibles embargos o inhibiciones judiciales,.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['situacion', 'registral', 'detectando', 'embargos', 'inhibiciones'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'traffic',
+                    badge: 'Validez Temporal',
+                    title: 'Vigencia de Formularios',
+                    instruction: 'Marca afirmaciones correctas sobre los plazos de validez de la documentación.',
+                    items: [
+                        { text: 'El Formulario N° 12 de verificación física tiene una validez de 150 días hábiles.', color: 'green' },
+                        { text: 'La cédula verde no tiene vencimiento en poder del titular registral.', color: 'green' },
+                        { text: 'El Informe de dominio caduca a las 24 horas de ser emitido.', color: 'red' },
+                        { text: 'Los 30 días para transferir son días corridos incluyendo feriados.', color: 'red' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Verifique los plazos administrativos y la vigencia de la cédula para el propietario.',
+                    explanation: 'El Formulario 12 dura 150 días hábiles y la cédula verde no vence para el titular,.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Documentación Especial',
+                    title: 'El Certificado de Dominio',
+                    instruction: 'Diferencia el certificado de dominio del informe de dominio común.',
+                    tutor: 'Este trámite es exclusivo de ciertas figuras legales y no para cualquier persona.',
+                    explanation: 'El certificado es un trámite que solo el titular, las autoridades judiciales o de seguridad pueden realizar.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['titular', 'autoridades', 'judiciales', 'seguridad', 'exclusivo'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                }
             ],
-            tutor: 'Pensá en quiénes firman y quién inscribe el trámite.',
-            explanation: 'En la transferencia de dominio intervienen el comprador, el vendedor y el Registro Seccional, que es quien inscribe el cambio de titularidad.'
-        },
-        {
-            type: 'text',
-            badge: 'Plazo legal del trámite',
-            title: 'Tiempo máximo para transferir',
-            instruction: 'Explicá cuál es el plazo legal para realizar la transferencia y qué sucede si no se cumple.',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('plaz')) c++; // plazo
-                if (v.includes('prohibi')) c++; // prohibición
-                if (v.includes('circul')) c++; // circular
-                if (v.includes('secuestr')) c++; // secuestro
-                if (v.includes('30')) c++; // 30 días (extra)
-                if (v.includes('habil')) c++; // hábiles (extra)
-                return c >= 2;
-            },
-            tutor: 'Revisá qué ocurre cuando el trámite no se hace a tiempo.',
-            explanation: 'El trámite debe realizarse dentro de los 30 días hábiles; si no se cumple el plazo, se dispone la prohibición de circular y el pedido de secuestro del vehículo.'
-        },
-        {
-            type: 'blanks',
-            badge: 'Documentación personal',
-            title: 'Identificación de las partes',
-            instruction: 
-                'Completá la frase.<br><br>' +
-                'El DNI acredita la __________ de las partes intervinientes.<br>' +
-                'La constancia de documento en trámite no acredita __________.',
-            blanks: ['identidad', 'identidad'],
-            tutor: 'Pensá en el valor legal del documento.',
-            explanation: 'El DNI acredita la identidad de las partes, mientras que la constancia de documento en trámite no acredita identidad.'
-        },
-        {
-            type: 'text',
-            badge: 'Formulario clave del trámite',
-            title: 'Función de la Solicitud Tipo 08',
-            instruction: '¿Para qué se utiliza la Solicitud Tipo 08 en la transferencia de dominio?',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('solicit')) c++; // solicitud
-                if (v.includes('08')) c++; // 08
-                if (v.includes('firm')) c++; // firmas
-                if (v.includes('transfer')) c++; // transferencia
-                if (v.includes('formulari')) c++; // formulario (extra)
-                if (v.includes('formaliz')) c++; // formaliza (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en el formulario que expresa la voluntad de las partes.',
-            explanation: 'La Solicitud Tipo 08 es el formulario principal del trámite, donde constan las firmas de las partes y se formaliza la transferencia de dominio.'
-        },
-        {
-            type: 'checklist',
-            badge: 'Documentación del vehículo',
-            title: 'Papeles exigidos para transferir',
-            instruction: 'Marcá la documentación del vehículo requerida para la transferencia.',
-            items: [
-                { text: 'Título del automotor', correct: true },
-                { text: 'Licencia de conducir', correct: false },
-                { text: 'Cédula de identificación', correct: true },
-                { text: 'Constancia de CUIT', correct: false }
+            analisis: [
+                {
+                    type: 'text',
+                    badge: 'Errores en la Identificación',
+                    title: 'La constancia de documento',
+                    instruction: 'Explica por qué una constancia de DNI en trámite es insuficiente para realizar el trámite de transferencia.',
+                    tutor: 'Revisa la validez legal de los documentos temporales frente a los definitivos.',
+                    explanation: 'La constancia de documento en trámite no acredita una identidad válida para el sistema registral.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['constancia', 'tramite', 'acredita', 'identidad', 'valida', 'registral'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'text',
+                    badge: 'Incumplimiento de Plazos',
+                    title: 'Consecuencias de la mora',
+                    instruction: 'Describe la sanción automática que recae sobre el vehículo tras vencer el plazo de 30 días hábiles.',
+                    tutor: 'El tiempo afecta directamente la legalidad del tránsito del rodado por las vías públicas.',
+                    explanation: 'Superar el plazo genera la prohibición de circular y el pedido de secuestro inmediato del rodado.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['prohibicion', 'circular', 'secuestro', 'inmediato', 'rodado'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Exenciones de Verificación',
+                    title: 'Casos especiales de dispensa',
+                    instruction: 'Marca las situaciones donde no es obligatorio realizar la verificación física en Formulario 12.',
+                    items: [
+                        { text: 'Automotores con menos de 2 años de antigüedad', correct: true },
+                        { text: 'Transferencia entre familiares hasta el 4° grado', correct: true },
+                        { text: 'Vehículos importados después de 2001', correct: false },
+                        { text: 'Sucesión a favor de ascendientes o cónyuges', correct: true }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Piensa en antigüedad, parentesco y causas hereditarias.',
+                    explanation: 'Se exime de verificar a autos nuevos, traspasos entre familiares o herederos directos según la norma.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Responsabilidad Civil',
+                    title: 'El riesgo del vendedor',
+                    instruction: 'Analiza la situación legal del vendedor que entrega el vehículo sin concretar la inscripción de la transferencia.',
+                    tutor: 'El titular registral sigue ligado legalmente al vehículo hasta que se registre el nuevo dueño.',
+                    explanation: 'El transmitente será civilmente responsable por los daños y perjuicios producidos mientras sea dueño de la cosa.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['transmitente', 'civilmente', 'responsable', 'danos', 'perjuicios'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'blanks',
+                    anyOrder: false,
+                    badge: 'Seguridad Jurídica',
+                    title: 'Bloqueo de circulación',
+                    instruction: 'Completa la frase<br><br>El Registro decreta la _____ de circular si el trámite no se realiza dentro de los _____ hábiles posteriores a la operación.',
+                    blanks: ['prohibición', '30 días'],
+                    tutor: 'El plazo administrativo protege al sistema registral de transacciones que no han sido formalizadas.',
+                    explanation: 'La prohibición de circular se activa automáticamente al cumplirse los 30 días sin registrar la transferencia.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Errores Terminológicos',
+                    title: 'Denuncia vs. Baja por robo',
+                    instruction: 'Argumenta por qué es un error técnico llamar "baja por robo" al trámite de denuncia de sustracción.',
+                    tutor: 'Diferencia entre la eliminación definitiva del legajo y la simple notificación de un ilícito policial.',
+                    explanation: 'Llamarlo baja es un error, ya que la baja de dominio es un trámite distinto a la sustracción.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['error', 'baja', 'dominio', 'distinto', 'sustraccion'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Validez de Firmas',
+                    title: 'Requisitos de la Solicitud 08',
+                    instruction: 'Selecciona las condiciones necesarias para que la certificación de firmas en el Formulario 08 sea válida.',
+                    items: [
+                        { text: 'Firmadas ante el encargado del Registro Seccional', correct: true },
+                        { text: 'Certificadas por escribano público', correct: true },
+                        { text: 'Firma del cónyuge si es bien ganancial', correct: true },
+                        { text: 'Firma autorizada por gestor administrativo', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'El gestor no tiene la potestad legal para certificar la autenticidad de las firmas de las partes.',
+                    explanation: 'Las firmas deben ser ante el Registro o escribano, incluyendo al cónyuge en bienes gananciales.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Documentación Preventiva',
+                    title: 'Informe vs. Certificado de dominio',
+                    instruction: 'Justifica por qué un gestor o tercero no puede solicitar el certificado de dominio del automotor.',
+                    tutor: 'Identifique quién tiene el derecho legal exclusivo sobre el estado de un legajo que queda bloqueado.',
+                    explanation: 'El certificado tiene exclusividad para el titular o autoridades judiciales, a diferencia del informe común.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['certificado', 'exclusividad', 'titular', 'autoridades', 'judiciales'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'traffic',
+                    badge: 'Mitos Registrales',
+                    title: 'Realidades de la gestión automotriz',
+                    instruction: 'Marca afirmaciones correctas',
+                    items: [
+                        { text: 'La verificación técnica (VTV) reemplaza a la verificación física de motor y chasis (F12).', color: 'red' },
+                        { text: 'La denuncia de venta registral exime al vendedor de responsabilidad civil futura.', color: 'green' },
+                        { text: 'El formulario 08 es gratuito si comprador y vendedor firman juntos en el Registro.', color: 'green' },
+                        { text: 'Es posible transferir un vehículo con prenda vigente sin notificar al acreedor.', color: 'red' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Distingui claramente entre trámites policiales, impositivos y las obligaciones registrales.',
+                    explanation: 'La denuncia de venta protege al titular y el 08 es gratuito bajo condiciones específicas de firma.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Vigencia Documental',
+                    title: 'La Cédula de Identificación',
+                    instruction: 'Evaluar la validez de la cédula verde cuando se encuentra en poder del titular registral.',
+                    tutor: 'El propietario legal no tiene las mismas restricciones de tiempo que un tercero autorizado.',
+                    explanation: 'En poder del titular, la cédula verde no tiene vencimiento mientras dure su vigencia registral.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['titular', 'cedula', 'vencimiento', 'vigencia', 'registral'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                }
             ],
-            tutor: 'Pensá en los documentos que identifican al rodado.',
-            explanation: 'El título del automotor y la cédula de identificación son documentos esenciales para acreditar la situación registral del vehículo.'
-        },
-        {
-            type: 'text',
-            badge: 'Informe de dominio',
-            title: 'Utilidad previa al trámite',
-            instruction: 'Explicá para qué sirve solicitar un informe de dominio antes de transferir un vehículo.',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('inform')) c++; // informe
-                if (v.includes('domini')) c++; // dominio
-                if (v.includes('situacion')) c++; // situación
-                if (v.includes('registral')) c++; // registral
-                if (v.includes('gravamen')) c++; // gravámenes
-                if (v.includes('embarg')) c++; // embargos (extra)
-                if (v.includes('inhibi')) c++; // inhibiciones (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en embargos, inhibiciones y estado legal.',
-            explanation: 'El informe de dominio permite conocer la situación registral del vehículo, verificando la existencia de gravámenes, embargos o restricciones antes de la transferencia.'
-        },
-        {
-            type: 'traffic',
-            badge: 'Verificación policial',
-            title: 'Obligatoriedad del control físico',
-            instruction: 'Indicá si las afirmaciones son correctas o incorrectas.',
-            items: [
-                { text: 'La verificación reemplaza a la VTV.', color: 'red' },
-                { text: 'La verificación policial controla motor y chasis del vehículo.', color: 'green' },
-                { text: 'El Formulario 12 tiene una validez limitada.', color: 'green' }
+            escenarios: [
+                {
+                    type: 'text',
+                    badge: 'Comprador Extranjero',
+                    title: 'Identificación de Ciudadanos de Países Limítrofes',
+                    instruction: 'Determina los documentos válidos para un comprador brasileño que no posee residencia permanente en Argentina.',
+                    tutor: 'Revise los requisitos específicos para ciudadanos de naciones vecinas sin radicación fija.',
+                    explanation: 'Para ciudadanos de países limítrofes, se admite como identificación el DNI, CI de origen o el pasaporte.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['limitrofes', 'identificacion', 'dni', 'origen', 'pasaporte'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'traffic',
+                    badge: 'Autorizados a Conducir',
+                    title: 'Uso de la Cédula Azul en Viajes',
+                    instruction: 'Marca afirmaciones correctas sobre la circulación de un tercero autorizado hacia un país vecino.',
+                    items: [
+                        { text: 'La cédula azul permite salir con el automóvil a un país limítrofe de forma temporal.', color: 'green' },
+                        { text: 'Es obligatorio que el autorizado lleve también la cédula verde del titular para viajar.', color: 'red' },
+                        { text: 'El titular puede solicitar dejar sin efecto la cédula azul en cualquier momento.', color: 'green' },
+                        { text: 'La cédula azul habilita al autorizado a vender el vehículo sin permiso del dueño.', color: 'red' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'La cédula azul otorga autonomía para circular y salir del país, pero no facultades de disposición.',
+                    explanation: 'El autorizado puede circular y viajar a países limítrofes temporalmente sin necesidad de portar la cédula verde.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Extravío de Documentación',
+                    title: 'Requisito Previo para Duplicado de Título',
+                    instruction: 'Explica el paso obligatorio que debe cumplir el interesado antes de presentarse en el Registro por la pérdida de su título de propiedad.',
+                    tutor: 'Este trámite físico es indispensable para garantizar la seguridad registral ante la falta del documento original.',
+                    explanation: 'Ante el extravío, el interesado debe verificar la unidad en la planta habilitada antes de ir al registro.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['extravio', 'interesado', 'verificar', 'planta', 'registro'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Excepciones de Control',
+                    title: 'Transferencia entre Familiares',
+                    instruction: 'Seleccionar las condiciones bajo las cuales no se exige la verificación física en una transferencia sucesoria.',
+                    items: [
+                        { text: 'Cuando el heredero es ascendiente', correct: true },
+                        { text: 'Cuando el heredero es un primo segundo', correct: false },
+                        { text: 'Cuando el heredero es el cónyuge', correct: true },
+                        { text: 'Cuando el heredero es descendiente', correct: true }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'La ley otorga este beneficio solo a los miembros del núcleo familiar directo por consanguinidad o matrimonio.',
+                    explanation: 'La transmisión sucesoria a favor de ascendientes, descendientes o cónyuges está exenta del requisito de verificación física.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Justificación de Fondos',
+                    title: 'Montos Superiores a 50 Millones',
+                    instruction: 'Detalla la obligación del comprador cuando el valor de adquisición del vehículo alcanza los 60 millones de pesos.',
+                    tutor: 'Se trata de una medida de control para prevenir el lavado de activos en compras de alto valor.',
+                    explanation: 'El comprador debe probar la procedencia de los fondos utilizados para la compra de forma fehaciente.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['comprador', 'probar', 'procedencia', 'fondos', 'fehaciente'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'traffic',
+                    badge: 'Sustracción del Rodado',
+                    title: 'Denuncia de Robo o Hurto',
+                    instruction: 'Marca afirmaciones correctas sobre el procedimiento ante el ilícito de una unidad inscripta.',
+                    items: [
+                        { text: 'La denuncia en el Registro debe hacerse tras realizar la denuncia policial o judicial.', color: 'green' },
+                        { text: 'El trámite de denuncia de robo es técnicamente lo mismo que una baja de dominio.', color: 'red' },
+                        { text: 'Se debe notificar al acreedor prendario mediante la Solicitud Tipo 04 si existiera prenda.', color: 'green' },
+                        { text: 'El Registro entrega una nueva cédula verde tras procesar la denuncia de robo.', color: 'red' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'No confundas la notificación de la sustracción con la eliminación definitiva del legajo del automotor.',
+                    explanation: 'La denuncia de robo requiere previa notificación policial y comunicación al acreedor prendario si el auto está prendado.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Gravámenes Vigentes',
+                    title: 'Venta de Automotor con Prenda',
+                    instruction: 'Indica la acción necesaria para proceder con la transferencia de un vehículo que posee una prenda activa.',
+                    tutor: 'El titular debe informar fehacientemente al titular de la carga sobre el cambio de dueño.',
+                    explanation: 'Es obligatorio comunicar la transferencia al acreedor prendario mediante carta documento o telegrama colacionado.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['comunicar', 'transferencia', 'acreedor', 'prendario', 'telegrama'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Transferencias Judiciales',
+                    title: 'Oficio Sucesorio a No Herederos',
+                    instruction: 'Identificar los requisitos simplificados para inscribir ventas ordenadas en juicios sucesorios según la norma.',
+                    items: [
+                        { text: 'No se exige inscripción previa de declaratoria de herederos', correct: true },
+                        { text: 'Debe constar obligatoriamente el gestor autorizado', correct: false },
+                        { text: 'La minuta puede ser suscripta por el Juez', correct: true },
+                        { text: 'Se requiere autorización especial para diligenciar', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Busque las simplificaciones procesales que permiten agilizar la orden judicial sin pasos intermedios.',
+                    explanation: 'Las ventas judiciales a no herederos no requieren inscripción previa de declaratoria si el juez firma la minuta.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Denuncia de Venta',
+                    title: 'Responsabilidad Civil del Vendedor',
+                    instruction: 'Explicar el efecto legal que produce la comunicación de la tradición del automotor ante el Registro.',
+                    tutor: 'Piense en cómo se protege el titular anterior ante posibles accidentes causados por el nuevo poseedor.',
+                    explanation: 'Comunicar esta circunstancia exime al transmitente de ser responsable civilmente por los daños que cause el vehículo.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['comunicar', 'circunstancia', 'exime', 'transmitente', 'responsable', 'civilmente', 'danos'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'traffic',
+                    badge: 'Modificaciones Mecánicas',
+                    title: 'Alta de Motor Usado',
+                    instruction: 'Marca afirmaciones correctas sobre la incorporación de un motor proveniente de otro rodado.',
+                    items: [
+                        { text: 'Debe presentarse el Certificado de Baja emitido por el Registro interviniente.', color: 'green' },
+                        { text: 'El alta de motor puede realizarse aunque el titular esté inhibido judicialmente.', color: 'red' },
+                        { text: 'En caso de condominio, todos los titulares deben presentarse con su DNI.', color: 'green' },
+                        { text: 'El Registro entrega una nueva cédula verde inmediatamente al solicitar la baja de motor.', color: 'red' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'La trazabilidad de las piezas mecánicas es fundamental para la legalidad del cambio de motor.',
+                    explanation: 'El alta requiere el certificado de baja del motor previo y la comparecencia de todos los condóminos titulares.'
+                }
             ],
-            tutor: 'Pensá en el control físico y su alcance.',
-            explanation: 'La verificación policial controla motor y chasis, no reemplaza la VTV y el Formulario 12 tiene validez limitada.'
-        },
-        {
-            type: 'text',
-            badge: 'Presentación en el Registro',
-            title: 'Paso final del trámite',
-            instruction: '¿En qué consiste la presentación final de la documentación en el Registro?',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('turn')) c++; // turno
-                if (v.includes('document')) c++; // documentación
-                if (v.includes('registr')) c++; // Registro
-                if (v.includes('concur')) c++; // concurrir (extra)
-                if (v.includes('inscrib')) c++; // inscriba (extra)
-                if (v.includes('transfer')) c++; // transferencia (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en el momento de entregar todo y cerrar el trámite.',
-            explanation: 'La presentación final consiste en concurrir al Registro con turno asignado y toda la documentación para que se inscriba la transferencia.'
-        },
-    ],
-
-    // ===================== ANÁLISIS CRÍTICO =====================
-    analisis: [
-        {
-            type: 'text',
-            badge: 'Seguridad jurídica del trámite',
-            title: 'Importancia de la inscripción registral',
-            instruction: 'Analizá por qué la inscripción de la transferencia en el Registro es clave para la seguridad jurídica del comprador.',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('inscri')) c++; // inscripción
-                if (v.includes('segurid')) c++; // seguridad
-                if (v.includes('juridic')) c++; // jurídica
-                if (v.includes('titular')) c++; // titularidad
-                if (v.includes('consolid')) c++; // consolida (extra)
-                if (v.includes('reconoc')) c++; // reconoce (extra)
-                if (v.includes('duen')) c++; // dueño (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en qué pasa si el cambio de dueño no se registra.',
-            explanation: 'La inscripción garantiza seguridad jurídica porque consolida la titularidad del comprador y lo reconoce legalmente como dueño del vehículo.'
-        },
-        {
-            type: 'text',
-            badge: 'Rol preventivo del gestor',
-            title: 'Control previo de la situación registral',
-            instruction: '¿Por qué es importante que el gestor analice la situación registral antes de iniciar la transferencia?',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('control')) c++; // control
-                if (v.includes('previo')) c++; // previo
-                if (v.includes('situacion')) c++; // situación
-                if (v.includes('registral')) c++; // registral
-                if (v.includes('riesg')) c++; // riesgos
-                if (v.includes('detect')) c++; // detectar (extra)
-                if (v.includes('embarg')) c++; // embargos (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en problemas que pueden frenar o invalidar el trámite.',
-            explanation: 'El control previo de la situación registral permite detectar riesgos y evitar iniciar transferencias con embargos, inhibiciones o conflictos legales.'
-        },
-        {
-            type: 'checklist',
-            badge: 'Consecuencias del incumplimiento',
-            title: 'Falta de transferencia en término',
-            instruction: 'Marcá las consecuencias posibles de no realizar la transferencia dentro del plazo legal.',
-            items: [
-                { text: 'Pedido de secuestro', correct: true },
-                { text: 'Renovación automática del título', correct: false },
-                { text: 'Prohibición de circular', correct: true },
-                { text: 'Responsabilidad del titular anterior', correct: true }
-            ],
-            tutor: 'Pensá en sanciones y responsabilidades que continúan vigentes.',
-            explanation: 'La falta de transferencia genera prohibición de circular, pedido de secuestro y mantiene la responsabilidad del titular anterior.'
-        },
-        {
-            type: 'text',
-            badge: 'Verificación física del vehículo',
-            title: 'Función dentro del trámite',
-            instruction: 'Analizá la función de la verificación física en relación con la documentación presentada.',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('verific')) c++; // verificación
-                if (v.includes('fisic')) c++; // física
-                if (v.includes('motor')) c++; // motor
-                if (v.includes('chasis')) c++; // chasis
-                if (v.includes('coincid')) c++; // coincidan (extra)
-                if (v.includes('identid')) c++; // identidad (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en la coincidencia entre vehículo y papeles.',
-            explanation: 'La verificación física controla que motor y chasis coincidan con la documentación, asegurando la identidad real del vehículo transferido.'
-        },
-        {
-            type: 'blanks',
-            badge: 'Responsabilidad del transmitente',
-            title: 'Riesgos hasta la inscripción',
-            instruction: 
-                'Completá las frases.<br><br>' +
-                'Hasta que se inscribe la transferencia, el __________ sigue siendo responsable.<br>' +
-                'La falta de inscripción afecta la __________ legal del comprador.',
-            blanks: ['titular registral', 'seguridad juridica'],
-            tutor: 'Pensá en quién responde antes del cambio registral.',
-            explanation: 'Mientras no se inscribe la transferencia, el titular registral sigue siendo responsable y se afecta la seguridad jurídica del comprador.'
-        },
-        {
-            type: 'text',
-            badge: 'Elección del Registro',
-            title: 'Criterios de radicación',
-            instruction: '¿Qué criterios se tienen en cuenta para elegir el Registro donde se radica el trámite?',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('radic')) c++; // radicación
-                if (v.includes('domicili')) c++; // domicilio
-                if (v.includes('guard')) c++; // guarda
-                if (v.includes('comprad')) c++; // comprador (extra)
-                if (v.includes('vehicul')) c++; // vehículo (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en el lugar del comprador o del vehículo.',
-            explanation: 'La radicación puede definirse según el domicilio del comprador o el lugar de guarda habitual del vehículo.'
-        },
-        {
-            type: 'checklist',
-            badge: 'Errores frecuentes',
-            title: 'Fallas documentales en la transferencia',
-            instruction: 'Marcá errores que pueden generar observaciones en el trámite.',
-            items: [
-                { text: 'Formulario incompleto', correct: true },
-                { text: 'Uso de tinta incorrecta', correct: true },
-                { text: 'Presentación sin turno', correct: false },
-                { text: 'Firmas sin certificar', correct: true }
-            ],
-            tutor: 'Pensá en requisitos formales exigidos por el Registro.',
-            explanation: 'Las firmas sin certificar, los formularios incompletos y el uso de tinta incorrecta generan observaciones en la transferencia.'
-        },
-        {
-            type: 'text',
-            badge: 'Función del plazo legal',
-            title: 'Protección del comprador y del sistema',
-            instruction: 'Analizá por qué el plazo legal de 30 días protege a las partes y al sistema registral.',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('plaz')) c++; // plazo
-                if (v.includes('legal')) c++; // legal
-                if (v.includes('control')) c++; // control
-                if (v.includes('orden')) c++; // orden
-                if (v.includes('proteg')) c++; // protegiendo (extra)
-                if (v.includes('evit')) c++; // evitando (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en previsibilidad y organización administrativa.',
-            explanation: 'El plazo legal permite control y orden del sistema, protegiendo a las partes y evitando situaciones irregulares prolongadas.'
-        },
-        {
-            type: 'traffic',
-            badge: 'Evaluación del trámite',
-            title: 'Condiciones para avanzar',
-            instruction: 'Indicá si las afirmaciones son correctas o incorrectas.',
-            items: [
-                { text: 'La verificación física es opcional en todos los casos.', color: 'red' },
-                { text: 'El informe de dominio permite detectar embargos.', color: 'green' },
-                { text: 'El Registro puede observar el trámite por errores formales.', color: 'green' }
-            ],
-            tutor: 'Pensá en controles previos y formales.',
-            explanation: 'El informe de dominio detecta embargos, la verificación no siempre es opcional y el Registro puede observar el trámite por errores formales.'
-        },
-        {
-            type: 'text',
-            badge: 'Responsabilidad profesional',
-            title: 'Impacto del accionar del gestor',
-            instruction: '¿Cómo influye el accionar del gestor en el resultado de la transferencia?',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('gestor')) c++; // gestor
-                if (v.includes('responsabil')) c++; // responsabilidad
-                if (v.includes('correct')) c++; // correcta
-                if (v.includes('inscri')) c++; // inscripción
-                if (v.includes('control')) c++; // control (extra)
-                if (v.includes('asesor')) c++; // asesoramiento (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en precisión, control y asesoramiento.',
-            explanation: 'El gestor tiene responsabilidad clave porque su control y asesoramiento garantizan una correcta inscripción de la transferencia.'
-        },
-    ],
-
-    // ===================== ESCENARIOS =====================
-    escenarios: [
-        {
-            type: 'text',
-            badge: 'Compra-venta con urgencia',
-            title: 'Decisión inicial del gestor',
-            instruction: 'Un comprador solicita iniciar la transferencia de inmediato, pero aún no cuenta con el informe de dominio. ¿Cómo debería proceder el gestor?',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('inform')) c++; // informe
-                if (v.includes('domini')) c++; // dominio
-                if (v.includes('control')) c++; // control
-                if (v.includes('previo')) c++; // previo
-                if (v.includes('riesg')) c++; // riesgos
-                if (v.includes('detect')) c++; // detectar (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en qué se debe verificar antes de avanzar.',
-            explanation: 'El gestor debe priorizar el informe de dominio como control previo, ya que permite detectar riesgos registrales antes de iniciar la transferencia.'
-        },
-        {
-            type: 'traffic',
-            badge: 'Evaluación de conductas profesionales',
-            title: 'Acciones correctas del gestor',
-            instruction: 'Indicá si las conductas son correctas o incorrectas.',
-            items: [
-                { text: 'Advertir al comprador sobre posibles embargos.', color: 'green' },
-                { text: 'Solicitar el informe de dominio antes de avanzar.', color: 'green' },
-                { text: 'Iniciar la transferencia sin conocer la situación registral.', color: 'red' }
-            ],
-            tutor: 'Pensá en prevención y resguardo legal.',
-            explanation: 'La conducta correcta incluye solicitar el informe de dominio, advertir riesgos y evitar iniciar la transferencia sin control previo.'
-        },
-        {
-            type: 'text',
-            badge: 'Verificación pendiente',
-            title: 'Impacto en el trámite',
-            instruction: 'Analizá qué sucede si se presenta la documentación sin haber realizado la verificación física obligatoria.',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('verific')) c++; // verificación
-                if (v.includes('fisic')) c++; // física
-                if (v.includes('observ')) c++; // observación
-                if (v.includes('tramit')) c++; // trámite
-                if (v.includes('acredit')) c++; // acredita (extra)
-                if (v.includes('correspond')) c++; // correspondencia (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en el control de motor y chasis.',
-            explanation: 'La falta de verificación física genera observación del trámite, ya que no se acredita la correspondencia entre vehículo y documentación.'
-        },
-        {
-            type: 'checklist',
-            badge: 'Presentación incompleta',
-            title: 'Elementos faltantes en el Registro',
-            instruction: 'Marcá los elementos cuya ausencia puede frenar la inscripción.',
-            items: [
-                { text: 'Formulario 08 con firmas certificadas', correct: true },
-                { text: 'Título del automotor', correct: true },
-                { text: 'Licencia de conducir del comprador', correct: false },
-                { text: 'Verificación física obligatoria', correct: true }
-            ],
-            tutor: 'Pensá en lo que exige el Registro para inscribir.',
-            explanation: 'Sin el Formulario 08 certificado, la verificación física y el título del automotor, el trámite queda observado.'
-        },
-        {
-            type: 'text',
-            badge: 'Plazo excedido',
-            title: 'Consecuencias operativas',
-            instruction: '¿Qué consecuencias enfrenta un comprador que supera el plazo legal sin transferir?',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('plaz')) c++; // plazo
-                if (v.includes('legal')) c++; // legal
-                if (v.includes('prohib')) c++; // prohibición
-                if (v.includes('circul')) c++; // circular
-                if (v.includes('secuestr')) c++; // secuestro
-                if (v.includes('afect')) c++; // afectando (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en sanciones administrativas.',
-            explanation: 'Superar el plazo legal puede generar prohibición de circular y pedido de secuestro, afectando el uso del vehículo.'
-        },
-        {
-            type: 'traffic',
-            badge: 'Evaluación del plazo',
-            title: 'Cumplimiento temporal',
-            instruction: 'Indicá si las afirmaciones son correctas o incorrectas.',
-            items: [
-                { text: 'La transferencia tardía afecta la circulación del vehículo.', color: 'green' },
-                { text: 'El plazo legal para transferir es de 30 días hábiles.', color: 'green' },
-                { text: 'El incumplimiento del plazo no tiene consecuencias.', color: 'red' }
-            ],
-            tutor: 'Pensá en tiempos legales y sanciones.',
-            explanation: 'El plazo legal es de 30 días hábiles y su incumplimiento genera consecuencias como prohibición de circular.'
-        },
-        {
-            type: 'text',
-            badge: 'Elección del Registro',
-            title: 'Criterio del domicilio',
-            instruction: 'Analizá cómo influye el domicilio del comprador en la elección del Registro Seccional.',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('domicili')) c++; // domicilio
-                if (v.includes('comprad')) c++; // comprador
-                if (v.includes('radic')) c++; // radicación
-                if (v.includes('registr')) c++; // registro
-                if (v.includes('defin')) c++; // definir (extra)
-                if (v.includes('cercan')) c++; // cercano (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en cercanía y jurisdicción.',
-            explanation: 'El domicilio del comprador permite definir la radicación del trámite en un Registro competente y cercano.'
-        },
-        {
-            type: 'checklist',
-            badge: 'Gestión responsable',
-            title: 'Acciones preventivas del gestor',
-            instruction: 'Marcá acciones que reflejan una gestión responsable.',
-            items: [
-                { text: 'Controlar plazos legales', correct: true },
-                { text: 'Presentar formularios incompletos', correct: false },
-                { text: 'Revisar documentación antes del turno', correct: true },
-                { text: 'Advertir riesgos al comprador', correct: true }
-            ],
-            tutor: 'Pensá en anticiparse a errores.',
-            explanation: 'La gestión responsable implica revisar documentación, advertir riesgos y controlar plazos legales.'
-        },
-        {
-            type: 'text',
-            badge: 'Observaciones registrales',
-            title: 'Impacto en los tiempos',
-            instruction: '¿Cómo afectan las observaciones del Registro al desarrollo del trámite?',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('observ')) c++; // observaciones
-                if (v.includes('demor')) c++; // demoras
-                if (v.includes('correcc')) c++; // correcciones
-                if (v.includes('oblig')) c++; // obligan (extra)
-                if (v.includes('realiz')) c++; // realizar (extra)
-                if (v.includes('continu')) c++; // continuar (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en trámites que no avanzan.',
-            explanation: 'Las observaciones generan demoras y obligan a realizar correcciones antes de continuar con la transferencia.'
-        },
-        {
-            type: 'traffic',
-            badge: 'Cierre del trámite',
-            title: 'Condiciones para la inscripción',
-            instruction: 'Indicá si las afirmaciones son correctas o incorrectas.',
-            items: [
-                { text: 'Un trámite sin observaciones puede inscribirse.', color: 'green' },
-                { text: 'La documentación correcta agiliza la transferencia.', color: 'green' },
-                { text: 'La inscripción depende solo del pago de aranceles.', color: 'red' }
-            ],
-            tutor: 'Pensá en requisitos completos y correctos.',
-            explanation: 'La inscripción se logra cuando no hay observaciones y la documentación correcta agiliza la transferencia.'
-        },
-    ],
-
-    // ===================== PRÁCTICA =====================
-    practica: [
-        {
-            type: 'checklist',
-            badge: 'Inicio del trámite',
-            title: 'Verificación previa obligatoria',
-            instruction: 'Marcá las acciones que deben realizarse antes de iniciar una transferencia.',
-            items: [
-                { text: 'Solicitar informe de dominio', correct: true },
-                { text: 'Controlar documentación del vehículo', correct: true },
-                { text: 'Verificar identidad de las partes', correct: true },
-                { text: 'Presentar el trámite sin revisión previa', correct: false }
-            ],
-            tutor: 'Pensá en los controles previos que evitan problemas posteriores.',
-            explanation: 'El inicio correcto del trámite requiere solicitar informe de dominio, controlar documentación y verificar identidad de las partes.'
-        },
-        {
-            type: 'text',
-            badge: 'Organización documental',
-            title: 'Preparación para el turno registral',
-            instruction: '¿Cómo debe organizarse la documentación antes de concurrir al Registro?',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('document')) c++; // documentación
-                if (v.includes('control')) c++; // control
-                if (v.includes('orden')) c++; // orden
-                if (v.includes('evit')) c++; // evitar (extra)
-                if (v.includes('observ')) c++; // observaciones (extra)
-                if (v.includes('agiliz')) c++; // agilizar (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en evitar observaciones y demoras.',
-            explanation: 'La documentación debe organizarse con control y orden previo para evitar observaciones y agilizar el trámite en el Registro.'
-        },
-        {
-            type: 'blanks',
-            badge: 'Formularios esenciales',
-            title: 'Identificación del trámite',
-            instruction: 
-                'Completá las frases.<br><br>' +
-                'La Solicitud Tipo 08 formaliza la __________ de dominio.<br>' +
-                'Las firmas deben estar debidamente __________.',
-            blanks: ['transferencia', 'certificadas'],
-            tutor: 'Pensá en el formulario principal y su validez legal.',
-            explanation: 'La Solicitud Tipo 08 formaliza la transferencia y requiere firmas certificadas para su validez.'
-        },
-        {
-            type: 'traffic',
-            badge: 'Control del vehículo',
-            title: 'Verificación física',
-            instruction: 'Indicá si las afirmaciones son correctas o incorrectas.',
-            items: [
-                { text: 'La verificación física controla motor y chasis.', color: 'green' },
-                { text: 'Puede omitirse aunque sea obligatoria.', color: 'red' },
-                { text: 'El Formulario 12 tiene validez limitada.', color: 'green' }
-            ],
-            tutor: 'Pensá en el control físico exigido por el Registro.',
-            explanation: 'La verificación física controla motor y chasis, no puede omitirse cuando es obligatoria y el Formulario 12 tiene validez limitada.'
-        },
-        {
-            type: 'text',
-            badge: 'Gestión de plazos',
-            title: 'Cumplimiento temporal del trámite',
-            instruction: 'Explicá cómo debe gestionarse el plazo legal para evitar sanciones.',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('plaz')) c++; // plazo
-                if (v.includes('control')) c++; // control
-                if (v.includes('cumplimient')) c++; // cumplimiento
-                if (v.includes('seguimient')) c++; // seguimiento (extra)
-                if (v.includes('asegur')) c++; // asegurar (extra)
-                if (v.includes('sancion')) c++; // sanciones (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en seguimiento y organización.',
-            explanation: 'El plazo legal se gestiona mediante control y seguimiento para asegurar el cumplimiento y evitar sanciones.'
-        },
-        {
-            type: 'checklist',
-            badge: 'Presentación en el Registro',
-            title: 'Requisitos formales',
-            instruction: 'Marcá requisitos formales exigidos al presentar el trámite.',
-            items: [
-                { text: 'Firmas certificadas', correct: true },
-                { text: 'Presentación sin turno', correct: false },
-                { text: 'Tinta negra o azul', correct: true },
-                { text: 'Formularios completos', correct: true }
-            ],
-            tutor: 'Pensá en exigencias formales del Registro.',
-            explanation: 'La presentación correcta exige formularios completos, firmas certificadas y uso de tinta negra o azul.'
-        },
-        {
-            type: 'text',
-            badge: 'Rol del gestor',
-            title: 'Acompañamiento al cliente',
-            instruction: '¿Cómo el gestor acompaña al cliente durante la transferencia?',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('asesor')) c++; // asesoramiento
-                if (v.includes('control')) c++; // control
-                if (v.includes('seguimient')) c++; // seguimiento
-                if (v.includes('inscri')) c++; // inscripción (extra)
-                if (v.includes('final')) c++; // final (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en guía y responsabilidad profesional.',
-            explanation: 'El gestor acompaña con asesoramiento, control del trámite y seguimiento hasta la inscripción final.'
-        },
-        {
-            type: 'traffic',
-            badge: 'Prevención de errores',
-            title: 'Buenas prácticas',
-            instruction: 'Indicá si las afirmaciones son correctas o incorrectas.',
-            items: [
-                { text: 'El control previo mejora la gestión.', color: 'green' },
-                { text: 'Revisar la documentación reduce observaciones.', color: 'green' },
-                { text: 'Las observaciones no afectan los plazos.', color: 'red' }
-            ],
-            tutor: 'Pensá en anticiparse a los problemas.',
-            explanation: 'Revisar documentación y realizar control previo reduce observaciones y mejora la gestión del trámite.'
-        },
-        {
-            type: 'text',
-            badge: 'Cierre del trámite',
-            title: 'Inscripción de la transferencia',
-            instruction: 'Explicá qué implica el cierre exitoso de una transferencia de dominio.',
-            validation: (raw) => {
-                const v = normalizar(raw);
-                let c = 0;
-                if (v.includes('inscri')) c++; // inscripción
-                if (v.includes('titular')) c++; // titularidad
-                if (v.includes('registr')) c++; // registro
-                if (v.includes('consolid')) c++; // consolidando (extra)
-                if (v.includes('nuev')) c++; // nuevo (extra)
-                if (v.includes('duen')) c++; // dueño (extra)
-                return c >= 2;
-            },
-            tutor: 'Pensá en el resultado final del trámite.',
-            explanation: 'El cierre exitoso se logra con la inscripción en el Registro, consolidando la titularidad del nuevo dueño.'
-        },
-        {
-            type: 'checklist',
-            badge: 'Evaluación final',
-            title: 'Trámite correctamente gestionado',
-            instruction: 'Marcá indicadores de una transferencia correctamente gestionada.',
-            items: [
-                { text: 'Inscripción sin observaciones', correct: true },
-                { text: 'Falta de control previo', correct: false },
-                { text: 'Documentación completa', correct: true },
-                { text: 'Plazo legal cumplido', correct: true }
-            ],
-            tutor: 'Pensá en orden, control y cumplimiento.',
-            explanation: 'Una transferencia correctamente gestionada se refleja en inscripción sin observaciones, documentación completa y plazo legal cumplido.'
-        }
-    ]
-};
+            practica: [
+                {
+                    type: 'checklist',
+                    badge: 'Documentación',
+                    title: 'Retiro de constancias',
+                    instruction: 'Selecciona los elementos que se retiran tras registrar una transferencia simple.',
+                    items: [
+                        { text: 'Título con nuevos datos', correct: true },
+                        { text: 'Cédula de Identificación', correct: true },
+                        { text: 'Informe de Infracción 13I', correct: true },
+                        { text: 'Póliza de seguro obligatoria', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Busca los documentos registrales que acrediten la nueva titularidad y el estado de multas del rodado.',
+                    explanation: 'Al finalizar el trámite se retira el Título con los nuevos datos, la Cédula y el Informe de infracciones.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Verificación Física',
+                    title: 'Constatación de numeración',
+                    instruction: 'Describi el objetivo técnico de realizar la verificación en las plantas habilitadas.',
+                    tutor: 'El trámite busca garantizar que la identidad física del rodado coincida con los papeles.',
+                    explanation: 'El trámite sirve para saber si el motor y el chasis tienen la misma numeración y si todo está en regla.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['motor', 'chasis', 'misma', 'numeracion', 'regla'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'blanks',
+                    anyOrder: true,
+                    badge: 'Gestión Digital',
+                    title: 'Opciones del Formulario 08',
+                    instruction: 'Completa la frase sobre las modalidades de inicio del trámite.<br><br>El usuario puede optar por hacer el Formulario 08 de forma _____ o _____, resultando esta última más ágil.',
+                    blanks: ['presencial', 'online'],
+                    tutor: 'Compare el método tradicional en papel con la opción disponible a través de internet.',
+                    explanation: 'Se puede optar por el trámite presencial, pero hacerlo de forma online resulta más ágil y rápido.'
+                },
+                {
+                    type: 'traffic',
+                    badge: 'Plazos Registrales',
+                    title: 'Validez de la documentación',
+                    instruction: 'Marca afirmaciones correctas sobre la vigencia de los formularios.',
+                    items: [
+                        { text: 'La verificación física realizada en Formulario 12 tiene una validez de 150 días hábiles.', color: 'green' },
+                        { text: 'La transferencia debe hacerse hasta 30 días hábiles después de la compra-venta.', color: 'green' },
+                        { text: 'La planta verificadora requiere sacar turno previo obligatoriamente.', color: 'red' },
+                        { text: 'El Formulario 12 solo es válido por 30 días corridos.', color: 'red' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Verifique los plazos administrativos para evitar la prohibición de circular y el secuestro.',
+                    explanation: 'El Formulario 12 vale por 150 días y la transferencia debe hacerse en un plazo de 30 días.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Pérdida de Documentos',
+                    title: 'Pasos ante extravío de Título',
+                    instruction: 'Detalla el requisito físico previo indispensable para solicitar el duplicado de un título robado o extraviado.',
+                    tutor: 'Identifique la acción de control físico que el Registro exige antes de emitir un nuevo cartón.',
+                    explanation: 'El interesado debe verificar la unidad en la planta verificadora de la radicación del rodado.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['verificar', 'unidad', 'planta', 'verificadora', 'radicacion'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Gestión Profesional',
+                    title: 'Requisitos para el Gestor',
+                    instruction: 'Selecciona los elementos obligatorios que debe presentar un gestor autorizado para ingresar un trámite.',
+                    items: [
+                        { text: 'Formulario N° 59M', correct: true },
+                        { text: 'DNI del gestor', correct: true },
+                        { text: 'Título de propiedad original', correct: true },
+                        { text: 'Contrato de gestoría certificado', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Recorda el formulario específico que identifica al mandatario y el documento del vehículo necesario.',
+                    explanation: 'El gestor debe presentar el Formulario 59M, su DNI y el Título original del automotor.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Modificaciones Mecánicas',
+                    title: 'Procedimiento de Baja de Motor',
+                    instruction: 'Explica quiénes deben presentarse ante el Registro para solicitar la baja de motor en caso de copropiedad.',
+                    tutor: 'La disposición de las piezas fundamentales requiere la voluntad de todos los dueños legales.',
+                    explanation: 'En caso de condominio, se deben presentar todos los titulares con su DNI original.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['condominio', 'presentar', 'titulares', 'dni', 'original'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'traffic',
+                    badge: 'Inscripción de Prenda',
+                    title: 'Ejecución del contrato prendario',
+                    instruction: 'Marca afirmaciones correctas sobre el lugar y forma de inscripción.',
+                    items: [
+                        { text: 'La prenda se inscribe generalmente en el lugar de radicación del vehículo.', color: 'green' },
+                        { text: 'No se inscribirán prendas cuyo titular esté inhibido judicialmente.', color: 'green' },
+                        { text: 'El contrato de prenda se completa obligatoriamente con papel carbónico.', color: 'green' },
+                        { text: 'La firma del cónyuge no es necesaria si el crédito es para saldo de precio.', color: 'green' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'La trazabilidad y las firmas certificadas son la base de la seguridad del acreedor.',
+                    explanation: 'La prenda se registra en la radicación y no admite titulares con inhibición judicial.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Honorarios',
+                    title: 'Cálculo de gastos de traslado',
+                    instruction: 'Describi los componentes del cálculo para determinar el gasto de traslado del profesional.',
+                    tutor: 'Utilice la fórmula matemática que combina el desgaste del vehículo y el combustible.',
+                    explanation: 'El cálculo usa un coeficiente de 0.134 por kilómetros y el valor de la nafta súper.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['calculo', 'coeficiente', 'kilometros', 'valor', 'nafta'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Pasos Finales',
+                    title: 'Ejecución de la Transferencia Online',
+                    instruction: 'Identifica los pasos correctos para completar una transferencia iniciada digitalmente.',
+                    items: [
+                        { text: 'Solicitar un turno en línea', correct: true },
+                        { text: 'Presentar la documentación físicamente en el Registro', correct: true },
+                        { text: 'Realizar la VTV previa', correct: false },
+                        { text: 'Certificar firmas en el Registro', correct: true }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'El inicio digital no elimina la necesidad de comparecer para la entrega de papeles y firmas.',
+                    explanation: 'Se debe solicitar turno en línea para presentar la documentación y certificar las firmas en el Registro.'
+                }
+            ]
+        };
 
         let currentModule = '';
         let currentIndex = 0;
@@ -1303,10 +1187,27 @@ const modules = {
             } else if (data.type === 'blanks') {
                 const inputs = document.querySelectorAll('.fill-input');
                 let hits = 0;
+                let usedAnswers = [];
                 inputs.forEach(inp => {
-                    const v = normalizar(inp.value);
-                    const ans = normalizar(inp.dataset.ans);
-                    if (v.length > 1 && ans.startsWith(v.slice(0, Math.max(2, Math.min(v.length, ans.length))))) hits++;
+                    const v = normalizar(inp.value.trim());
+                    if (v.length > 0) {
+                        if (data.anyOrder) {
+                            const matchedIdx = data.blanks.findIndex((ans, idx) => {
+                                if (usedAnswers.includes(idx)) return false;
+                                const normAns = normalizar(ans.trim());
+                                return (normAns === v || (v.length > 1 && normAns.startsWith(v.slice(0, Math.max(2, Math.min(v.length, normAns.length))))));
+                            });
+                            if (matchedIdx !== -1) {
+                                hits++;
+                                usedAnswers.push(matchedIdx);
+                            }
+                        } else {
+                            const ans = normalizar(inp.dataset.ans.trim());
+                            if (ans === v || (v.length > 1 && ans.startsWith(v.slice(0, Math.max(2, Math.min(v.length, ans.length)))))) {
+                                hits++;
+                            }
+                        }
+                    }
                 });
                 isCorrect = (hits === data.blanks.length);
             } else if (data.type === 'traffic') {
